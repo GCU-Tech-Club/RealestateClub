@@ -36,10 +36,11 @@ jobs:
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }} || echo "Login failed"
 
       # Step 4: Build and tag the Docker image with the branch name
+      # REPOSITORY_NAME: ${{ secrets.ECR_REPOSITORY_NAME }}
       - name: Build and Tag Docker Image
         env:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-          REPOSITORY_NAME: ${{ secrets.ECR_REPOSITORY_NAME }}
+          REPOSITORY_NAME: "gcurealestate"
           BRANCH: ${{ github.event.inputs.branch }}
         run: |
           IMAGE_TAG="$ECR_REGISTRY/$REPOSITORY_NAME:$BRANCH"
