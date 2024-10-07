@@ -21,36 +21,37 @@ jobs:
         with:
           ref: ${{ github.event.inputs.branch }}
 
-      # Step 2: Set up AWS CLI and Docker to interact with ECR
-      - name: Install AWS CLI and Docker
+      # Step 2: Log in to Amazon ECR
+      - name: Log in to Amazon ECR
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
         run: |
-          # Update the package index
-          sudo apt-get update
+          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
 
-          # Install prerequisites
-          sudo apt-get install -y \
-          apt-transport-https \
-          ca-certificates \
-          curl \
-          gnupg \
-          lsb-release \
-          software-properties-common
+      # Step 3: Build and tag the Docker image with the branch name
+      - name: Build and Tag Docker Image
+        env:
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          REPOSITORY_NAME: ${{ secrets.ECR_REPOSITORY_NAME }}
+          BRANCH: ${{ github.event.inputs.branch }}
+        run: |
+          IMAGE_TAG="$ECR_REGISTRY/$REPOSITORY_NAME:$BRANCH"
+          docker build -t $IMAGE_TAG .
+          docker tag $IMAGE_TAG "$ECR_REGISTRY/$REPOSITORY_NAME:latest"  # Optional: Also tag as latest
 
-          # Add Docker’s official GPG key
-          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+      # Step 4: Push the Docker image to ECR
+      - name: Push Docker Image to ECR
+        env:
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          REPOSITORY_NAME: ${{ secrets.ECR_REPOSITORY_NAME }}
+          BRANCH: ${{ github.event.inputs.branch }}
+        run: |
+          IMAGE_TAG="$ECR_REGISTRY/$REPOSITORY_NAME:$BRANCH"
+          docker push $IMAGE_TAG
+          docker push "$ECR_REGISTRY/$REPOSITORY_NAME:latest"  # Optional: Push the latest tag as well
 
-          # Set up the stable repository
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-          # Update the package index again
-          sudo apt-get update
-
-          # Install Docker
-          sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-
-          # Start Docker
-          sudo service docker start
-      # Step 3: SSH into the EC2 instance and deploy the Docker container
+      # Step 5: SSH into the EC2 instance and deploy the Docker container
       - name: Deploy to EC2 instance
         uses: appleboy/ssh-action@v0.1.7
         with:
