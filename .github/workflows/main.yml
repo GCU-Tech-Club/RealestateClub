@@ -41,7 +41,7 @@ jobs:
       - name: Build and Tag Docker Image
         env:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-          REPOSITORY_NAME: "gcurealestate"
+          REPOSITORY_NAME: ${{ secrets.ECR_REPOSITORY_NAME }}
           BRANCH: ${{ github.event.inputs.branch }}
         run: |
           IMAGE_TAG="$ECR_REGISTRY/$REPOSITORY_NAME:$BRANCH"
@@ -53,7 +53,7 @@ jobs:
       - name: Push Docker Image to ECR
         env:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-          REPOSITORY_NAME: "gcurealestate"
+          REPOSITORY_NAME: ${{ secrets.ECR_REPOSITORY_NAME }}
           BRANCH: ${{ github.event.inputs.branch }}
         run: |
           IMAGE_TAG="$ECR_REGISTRY/$REPOSITORY_NAME:$BRANCH"
