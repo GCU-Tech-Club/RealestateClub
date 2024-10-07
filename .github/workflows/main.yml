@@ -1,13 +1,12 @@
 name: Deploy to Test Environment on EC2
 
-# Trigger this workflow manually using workflow_dispatch and require a branch input.
 on:
   workflow_dispatch:
     inputs:
       branch:
         description: 'Specify the branch to deploy to the test environment'
         required: true
-        default: 'main'  # Default branch to deploy, can be changed as needed.
+        default: 'main'
 
 jobs:
   deploy:
@@ -21,15 +20,22 @@ jobs:
         with:
           ref: ${{ github.event.inputs.branch }}
 
-      # Step 2: Log in to Amazon ECR
+      # Step 2: Configure AWS credentials using GitHub Secrets
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Step 3: Log in to Amazon ECR
       - name: Log in to Amazon ECR
         env:
-          AWS_REGION: ${{ secrets.AWS_REGION }}
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
         run: |
-          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin $ECR_REGISTRY
 
-      # Step 3: Build and tag the Docker image with the branch name
+      # Step 4: Build and tag the Docker image with the branch name
       - name: Build and Tag Docker Image
         env:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
@@ -40,7 +46,7 @@ jobs:
           docker build -t $IMAGE_TAG .
           docker tag $IMAGE_TAG "$ECR_REGISTRY/$REPOSITORY_NAME:latest"  # Optional: Also tag as latest
 
-      # Step 4: Push the Docker image to ECR
+      # Step 5: Push the Docker image to ECR
       - name: Push Docker Image to ECR
         env:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
@@ -51,7 +57,7 @@ jobs:
           docker push $IMAGE_TAG
           docker push "$ECR_REGISTRY/$REPOSITORY_NAME:latest"  # Optional: Push the latest tag as well
 
-      # Step 5: SSH into the EC2 instance and deploy the Docker container
+      # Step 6: SSH into the EC2 instance and deploy the Docker container
       - name: Deploy to EC2 instance
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -59,7 +65,6 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            # Set the region and repository details from secrets
             REGION="${{ secrets.AWS_REGION }}"
             ECR_REGISTRY="${{ secrets.ECR_REGISTRY }}"
             REPOSITORY_NAME="${{ secrets.ECR_REPOSITORY_NAME }}"
