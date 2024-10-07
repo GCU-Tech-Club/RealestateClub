@@ -15,3 +15,9 @@ To view the running instances, run:
 $ docker ps
 To stop the container, run:
 $ docker-compose -f docker-compose.dev.yml down 
+
+# After running the Deploy to Test Workflow:
+You can visit this URL to see your changes on the server
+http://ec2-3-101-123-79.us-west-1.compute.amazonaws.com:8080
+
+
