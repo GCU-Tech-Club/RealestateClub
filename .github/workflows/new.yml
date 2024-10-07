@@ -1,0 +1,86 @@
+name: Deploy to Test Environment on EC2
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Specify the branch to deploy to the test environment'
+        required: true
+        default: 'main'
+
+jobs:
+  deploy:
+    name: Deploy to Test Environment on EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the specified branch from the repository
+      - name: Checkout specified branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      # Step 2: Configure AWS credentials using GitHub Secrets
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Step 3: Log in to Amazon ECR
+      - name: Log in to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+        run: |
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }} || echo "Login failed"
+
+      # Step 4: Build and Push Docker Images using Docker Compose
+      - name: Build and Push Docker Images using Docker Compose
+        env:
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          REPOSITORY_NAME: "gcurealestate"
+          BRANCH: ${{ github.event.inputs.branch }}
+        run: |
+          # Define the tag for the Docker images
+          IMAGE_TAG="$ECR_REGISTRY/$REPOSITORY_NAME:$BRANCH"
+          
+          # Use docker-compose to build and tag images
+          docker-compose -f docker-compose.dev.yml build --parallel
+
+          # Tag and push each service image defined in the docker-compose file
+          for service in $(docker-compose -f docker-compose.dev.yml config --services); do
+            docker tag $service $IMAGE_TAG-$service
+            docker push $IMAGE_TAG-$service
+          done
+
+      # Step 5: SSH into the EC2 instance and deploy using Docker Compose
+      - name: Deploy to EC2 instance
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            REGION="${{ secrets.AWS_REGION }}"
+            ECR_REGISTRY="${{ secrets.ECR_REGISTRY }}"
+            REPOSITORY_NAME="gcurealestate"
+            BRANCH="${{ github.event.inputs.branch }}"
+
+            # Authenticate Docker using the IAM role assigned to the EC2 instance
+            aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+
+            # Pull the latest Docker images for all services defined in docker-compose
+            for service in $(docker-compose -f docker-compose.dev.yml config --services); do
+              docker pull $ECR_REGISTRY/$REPOSITORY_NAME:$BRANCH-$service
+            done
+
+            # Navigate to the directory where docker-compose.dev.yml is located
+            cd /path/to/your/docker-compose/directory
+
+            # Bring up the services using docker-compose
+            docker-compose -f docker-compose.dev.yml down  # Stop existing services
+            docker-compose -f docker-compose.dev.yml up -d  # Start the services in detached mode
+
+            # Clean up unused Docker images to free up space
+            docker image prune -f
