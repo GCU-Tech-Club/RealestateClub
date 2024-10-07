@@ -28,6 +28,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      # DELETE
+      - name: temp step
+        run: |
+          aws sts get-caller-identity
+
       # Step 3: Log in to Amazon ECR
       # aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin $ECR_REGISTRY
       - name: Log in to Amazon ECR
