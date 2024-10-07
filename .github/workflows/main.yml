@@ -29,11 +29,14 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       # Step 3: Log in to Amazon ECR
+      # aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin $ECR_REGISTRY
       - name: Log in to Amazon ECR
         env:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
         run: |
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin $ECR_REGISTRY
+          echo "AWS_REGION=${{ secrets.AWS_REGION }}"
+          echo "ECR_REGISTRY=${{ secrets.ECR_REGISTRY }}"
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }} || echo "Login failed"
 
       # Step 4: Build and tag the Docker image with the branch name
       - name: Build and Tag Docker Image
