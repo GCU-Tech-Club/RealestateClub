@@ -1,0 +1,90 @@
+name: Deploy to Prod Environment on EC2
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Specify the branch to deploy to the test environment'
+        required: true
+        default: 'main'
+
+jobs:
+  deploy:
+    name: Deploy to Prod Environment on EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the specified branch from the repository
+      - name: Checkout specified branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      # Step 2: Configure AWS credentials using GitHub Secrets
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Step 3: Log in to Amazon ECR
+      - name: Log in to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+        run: |
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }} || echo "Login failed"
+
+      # Step 4: Build and tag the Docker image with the branch name
+      # REPOSITORY_NAME: ${{ secrets.ECR_REPOSITORY_NAME }}
+      # docker build -t $IMAGE_TAG .
+      - name: Build and Tag Docker Image
+        env:
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          REPOSITORY_NAME: "gcurealestate"
+          BRANCH: ${{ github.event.inputs.branch }}
+        run: |
+          IMAGE_TAG="$ECR_REGISTRY/$REPOSITORY_NAME:$BRANCH"
+          docker build -t $IMAGE_TAG -f ./backend/Dockerfile ./backend
+          docker tag $IMAGE_TAG "$ECR_REGISTRY/$REPOSITORY_NAME:latest"  # Optional: Also tag as latest
+
+      # Step 5: Push the Docker image to ECR
+      # REPOSITORY_NAME: ${{ secrets.ECR_REPOSITORY_NAME }}
+      - name: Push Docker Image to ECR
+        env:
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          REPOSITORY_NAME: "gcurealestate"
+          BRANCH: ${{ github.event.inputs.branch }}
+        run: |
+          IMAGE_TAG="$ECR_REGISTRY/$REPOSITORY_NAME:$BRANCH"
+          docker push $IMAGE_TAG
+          docker push "$ECR_REGISTRY/$REPOSITORY_NAME:latest"  # Optional: Push the latest tag as well
+
+      # Step 6: SSH into the EC2 instance and deploy the Docker container
+      # REPOSITORY_NAME="${{ secrets.ECR_REPOSITORY_NAME }}"
+      - name: Deploy to EC2 instance
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            REGION="${{ secrets.AWS_REGION }}"
+            ECR_REGISTRY="${{ secrets.ECR_REGISTRY }}"
+            REPOSITORY_NAME="gcurealestate"
+
+            # Authenticate Docker using the IAM role assigned to the EC2 instance
+            aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+
+            # Pull the latest Docker image for the branch deployed to the test environment
+            docker pull $ECR_REGISTRY/$REPOSITORY_NAME:${{ github.event.inputs.branch }}
+
+            # Stop and remove any existing test container if it is running
+            docker stop test-container || true
+            docker rm test-container || true
+
+            # Run the test container on port 8080
+            docker run -d --name test-container -p 8080:5001 $ECR_REGISTRY/$REPOSITORY_NAME:${{ github.event.inputs.branch }}
+
+            # Clean up unused Docker images to free up space
+            docker image prune -f
