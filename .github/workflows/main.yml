@@ -84,7 +84,7 @@ jobs:
             docker rm test-container || true
 
             # Run the test container on port 8080
-            docker run -d --name test-container -p 80:80 $ECR_REGISTRY/$REPOSITORY_NAME:${{ github.event.inputs.branch }}
+            docker run -d --name test-container -p 8080:5001 $ECR_REGISTRY/$REPOSITORY_NAME:${{ github.event.inputs.branch }}
 
             # Clean up unused Docker images to free up space
             docker image prune -f
