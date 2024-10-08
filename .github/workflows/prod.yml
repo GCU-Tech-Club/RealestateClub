@@ -1,7 +1,9 @@
 name: Deploy to Prod Environment on EC2
 
 on:
-  workflow_dispatch:  # Trigger workflow manually without inputs
+  push:
+    branches:
+      - main
 
 jobs:
   deploy:
