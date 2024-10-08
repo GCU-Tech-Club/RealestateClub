@@ -1,12 +1,7 @@
 name: Deploy to Prod Environment on EC2
 
 on:
-  workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Specify the branch to deploy to the test environment'
-        required: true
-        default: 'main'
+  workflow_dispatch:  # Trigger workflow manually without inputs
 
 jobs:
   deploy:
@@ -14,11 +9,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the specified branch from the repository
-      - name: Checkout specified branch
+      # Step 1: Checkout the 'main' branch from the repository
+      - name: Checkout 'main' branch
         uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.inputs.branch }}
+          ref: 'main'  # Always use the 'main' branch
 
       # Step 2: Configure AWS credentials using GitHub Secrets
       - name: Configure AWS credentials
@@ -31,37 +26,31 @@ jobs:
       # Step 3: Log in to Amazon ECR
       - name: Log in to Amazon ECR
         env:
-          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY_PROD }}
         run: |
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }} || echo "Login failed"
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY_PROD }} || echo "Login failed"
 
-      # Step 4: Build and tag the Docker image with the branch name
-      # REPOSITORY_NAME: ${{ secrets.ECR_REPOSITORY_NAME }}
-      # docker build -t $IMAGE_TAG .
+      # Step 4: Build and tag the Docker image with the 'main' branch
       - name: Build and Tag Docker Image
         env:
-          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-          REPOSITORY_NAME: "gcurealestate"
-          BRANCH: ${{ github.event.inputs.branch }}
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY_PROD }}
+          REPOSITORY_NAME: "gcurealestateprod"
         run: |
-          IMAGE_TAG="$ECR_REGISTRY/$REPOSITORY_NAME:$BRANCH"
+          IMAGE_TAG="$ECR_REGISTRY/$REPOSITORY_NAME:main"
           docker build -t $IMAGE_TAG -f ./backend/Dockerfile ./backend
           docker tag $IMAGE_TAG "$ECR_REGISTRY/$REPOSITORY_NAME:latest"  # Optional: Also tag as latest
 
       # Step 5: Push the Docker image to ECR
-      # REPOSITORY_NAME: ${{ secrets.ECR_REPOSITORY_NAME }}
       - name: Push Docker Image to ECR
         env:
-          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-          REPOSITORY_NAME: "gcurealestate"
-          BRANCH: ${{ github.event.inputs.branch }}
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY_PROD }}
+          REPOSITORY_NAME: "gcurealestateprod"
         run: |
-          IMAGE_TAG="$ECR_REGISTRY/$REPOSITORY_NAME:$BRANCH"
+          IMAGE_TAG="$ECR_REGISTRY/$REPOSITORY_NAME:main"
           docker push $IMAGE_TAG
           docker push "$ECR_REGISTRY/$REPOSITORY_NAME:latest"  # Optional: Push the latest tag as well
 
       # Step 6: SSH into the EC2 instance and deploy the Docker container
-      # REPOSITORY_NAME="${{ secrets.ECR_REPOSITORY_NAME }}"
       - name: Deploy to EC2 instance
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -70,21 +59,21 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           script: |
             REGION="${{ secrets.AWS_REGION }}"
-            ECR_REGISTRY="${{ secrets.ECR_REGISTRY }}"
-            REPOSITORY_NAME="gcurealestate"
+            ECR_REGISTRY="${{ secrets.ECR_REGISTRY_PROD }}"
+            REPOSITORY_NAME="gcurealestateprod"
 
             # Authenticate Docker using the IAM role assigned to the EC2 instance
             aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
 
-            # Pull the latest Docker image for the branch deployed to the test environment
-            docker pull $ECR_REGISTRY/$REPOSITORY_NAME:${{ github.event.inputs.branch }}
+            # Pull the latest Docker image for the 'main' branch
+            docker pull $ECR_REGISTRY/$REPOSITORY_NAME:main
 
             # Stop and remove any existing test container if it is running
-            docker stop test-container || true
-            docker rm test-container || true
+            docker stop prod-container || true
+            docker rm prod-container || true
 
-            # Run the test container on port 8080
-            docker run -d --name test-container -p 8080:5001 $ECR_REGISTRY/$REPOSITORY_NAME:${{ github.event.inputs.branch }}
+            # Run the container on port 8080
+            docker run -d --name prod-container -p 8080:5001 $ECR_REGISTRY/$REPOSITORY_NAME:main
 
             # Clean up unused Docker images to free up space
             docker image prune -f
