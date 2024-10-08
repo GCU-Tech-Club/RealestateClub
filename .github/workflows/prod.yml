@@ -75,5 +75,8 @@ jobs:
             # Run the container on port 9091
             docker run -d --name prod-container -p 9091:5001 $ECR_REGISTRY/$REPOSITORY_NAME:main
 
+            # restart nginx (probably would be fine without but for peace of mind)
+            sudo systemctl restart nginx
+
             # Clean up unused Docker images to free up space
             docker image prune -f
