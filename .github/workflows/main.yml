@@ -86,5 +86,8 @@ jobs:
             # Run the test container on port 8081
             docker run -d --name test-container -p 8081:5001 $ECR_REGISTRY/$REPOSITORY_NAME:${{ github.event.inputs.branch }}
 
+            # restart nginx (probably would be fine without but for peace of mind)
+            sudo systemctl restart nginx
+
             # Clean up unused Docker images to free up space
             docker image prune -f
