@@ -6,3 +6,4 @@ Content-Type: application/json
     "email": "enteredEmail",
     "gradYear": "enteredYear",
 }
+//TODO: setup in typescript

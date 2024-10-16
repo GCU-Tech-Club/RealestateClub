@@ -1,4 +1,4 @@
-const express = require('express')
+const express = require('express')//TODO: Setup in TypeScript
 const router = express.Router()
 const Member = require('../models/member')
 

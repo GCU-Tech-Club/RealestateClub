@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')//replace all mongo code with firebase
+const mongoose = require('mongoose')//TODO:replace all mongo code with firebase, setup in typescript
 
 const memberSchema = new mongoose.Schema({
     name: {
