@@ -22,4 +22,7 @@ RUN npm ci --only=production
 
 COPY --from=build /app/dist ./dist
 
+# Copy the service account key into the container
+COPY firebase-sak.json /app/firebase-sak.json
+
 CMD ["node", "dist/index.js"]
