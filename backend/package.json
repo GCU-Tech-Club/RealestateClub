@@ -17,6 +17,7 @@
     "typescript": "^5.6.2"
   },
   "dependencies": {
+    "backend": "file:",
     "express": "^4.21.0",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2"

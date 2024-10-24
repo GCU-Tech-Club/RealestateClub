@@ -1,12 +1,13 @@
-import express from 'express';
+
+import express from 'express'; // import the express variable
+import routeHandler from './routes/routeHandler'; // import the routes variable
 
 const app = express();
 const port = 5001;
 
-app.get('/', (req, res) => {
-    res.send('Hello World');
-});
+
+app.use('/', routeHandler);
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`Server is at http://localhost:${port}`);        
 });
