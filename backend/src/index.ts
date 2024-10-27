@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express';
 import admin from 'firebase-admin';
-var serviceAccount = require("/app/firebase-sak.json");
+//var serviceAccount = require("../firebase-sak.json");
+require('dotenv').config()
+const serviceAccount = JSON.parse(process.env.FIREBASE_SAK as string);
 
 // Initialize Firebase Admin SDK
 admin.initializeApp({
