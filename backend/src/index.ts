@@ -33,6 +33,9 @@ if (!productionMode) {
   console.log("Connected to Firestore and Auth emulators.");
 }
 
+import express from 'express'; // import the express variable
+import routeHandler from './routes/routeHandler'; // import the routes variable
+
 const app = express();
 const port = 5001;
 
@@ -58,6 +61,8 @@ app.get('/firebase-test', async (req: Request, res: Response) => {
       });
     }
   });
+
+app.use('/', routeHandler);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
