@@ -73,6 +73,11 @@ jobs:
             ECR_REGISTRY="${{ secrets.ECR_REGISTRY }}"
             REPOSITORY_NAME="gcurealestate"
 
+            # Update packages and install Node.js
+            sudo apt-get update -y
+            curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+
             # Install Firebase CLI globally
             sudo npm install -g firebase-tools
 
