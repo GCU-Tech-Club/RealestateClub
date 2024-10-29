@@ -34,4 +34,9 @@ workflow will run. When the workflow finishes your changes will reflect on
 http://ec2-3-101-123-79.us-west-1.compute.amazonaws.com
 
 
+# FIREBASE
+to install the CLI tool use the following command (might require sudo if it fails)
+`npm install -g firebase-tools`
 
+now to run the firebase emulator so you can work with auth and firestore locally run
+`firebase emulators:start`
