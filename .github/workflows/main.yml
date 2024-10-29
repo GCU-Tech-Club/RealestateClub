@@ -85,13 +85,10 @@ jobs:
 
             # Run the emulator in the background
             docker run -d --name firebase-emulator -p 8080:8080 -p 9099:9099 -p 7001:7001 \
-              -e FIREBASE_AUTH_EMULATOR_HOST=localhost:9099 \
-              -e FIREBASE_EMULATOR=TRUE \
-              -e PROJECT_ID=<gcurealestate-ae639> \
-              -e FIREBASE_DATABASE_EMULATOR_HOST=localhost:8080 \
-              -e FIRESTORE_EMULATOR_HOST=localhost:7001 \
-              -e NODE_OPTIONS="--max-old-space-size=4096" \
-              firebase/emulator
+            -e FIREBASE_AUTH_EMULATOR_HOST=localhost:9099 \
+            -e FIREBASE_DATABASE_EMULATOR_HOST=localhost:8080 \
+            -e FIRESTORE_EMULATOR_HOST=localhost:7001 \
+            firebase/emulator
 
             # Run the test container on port 8081
             docker run -d --env PRODUCTION_MODE=false --name test-container -p 8081:5001 $ECR_REGISTRY/$REPOSITORY_NAME:${{ github.event.inputs.branch }}
