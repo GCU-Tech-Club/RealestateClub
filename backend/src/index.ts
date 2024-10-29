@@ -1,8 +1,12 @@
 import express, { Request, Response } from 'express';
+import routeHandler from './routes/routeHandler'; // import the routes variable
 import admin from 'firebase-admin';
 //var serviceAccount = require("../firebase-sak.json");
 require('dotenv').config()
 const productionMode = process.env.PRODUCTION_MODE === 'true';
+
+const app = express();
+const port = 5001;
 
 // Initialize Firebase Admin SDK
 if (productionMode) {
@@ -27,23 +31,14 @@ if (!productionMode) {
     projectId: 'gcurealestate-ae639',
     ssl: false,
   })
-
   process.env.FIREBASE_AUTH_EMULATOR_HOST = 'localhost:9099';
   process.env.FIRESTORE_EMULATOR_HOST = 'localhost:7001';
   console.log("Connected to Firestore and Auth emulators.");
 }
 
-import express from 'express'; // import the express variable
-import routeHandler from './routes/routeHandler'; // import the routes variable
-
-const app = express();
-const port = 5001;
-
-app.get('/', (req, res) => {
-    res.send('Hello World');
-});
-
 // Test route to check Firebase connection
+// TODO Get rid of this once we actually have some firebase functionality working
+// for right now this is just an endpoint you can hit to make sure the db is working properly
 app.get('/firebase-test', async (req: Request, res: Response) => {
     try {
       // Check Firebase Admin connection by listing Firestore collections
@@ -60,7 +55,7 @@ app.get('/firebase-test', async (req: Request, res: Response) => {
         error: error,
       });
     }
-  });
+});
 
 app.use('/', routeHandler);
 
