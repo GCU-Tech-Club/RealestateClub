@@ -64,7 +64,7 @@ jobs:
             REGION="${{ secrets.AWS_REGION }}"
             ECR_REGISTRY="${{ secrets.ECR_REGISTRY_PROD }}"
             REPOSITORY_NAME="gcurealestateprod"
-            FIREBASE_SAK="${{ secrets.FIREBASE_SAK }}"
+            export FIREBASE_SAK="${{ secrets.FIREBASE_SAK }}"
 
             # Authenticate Docker using the IAM role assigned to the EC2 instance
             aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
@@ -77,7 +77,7 @@ jobs:
             docker rm prod-container || true
 
             # Run the container on port 9091
-            docker run -d --env PRODUCTION_MODE=true --env "$FIREBASE_SAK" --name prod-container -p 9091:5001 $ECR_REGISTRY/$REPOSITORY_NAME:main
+            docker run -d --env PRODUCTION_MODE=true --env $FIREBASE_SAK --name prod-container -p 9091:5001 $ECR_REGISTRY/$REPOSITORY_NAME:main
 
             # restart nginx (probably would be fine without but for peace of mind)
             sudo systemctl restart nginx
