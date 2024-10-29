@@ -11,7 +11,8 @@ router
 router
 .route("/")
 .get(async (req, res) => {
-    console.log("Hello World from Main Endpoint!")
+    console.log("Hello World from Main Endpoint!");
+    res.send("Hello World!");
 });
 
 export default router;
