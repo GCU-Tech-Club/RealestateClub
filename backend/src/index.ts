@@ -10,6 +10,7 @@ const port = 5001;
 
 // Initialize Firebase Admin SDK
 if (productionMode) {
+  console.log(process.env.FIREBASE_SAK);
   const serviceAccount = JSON.parse(process.env.FIREBASE_SAK as string);
 
   admin.initializeApp({
