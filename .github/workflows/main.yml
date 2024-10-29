@@ -73,8 +73,14 @@ jobs:
             ECR_REGISTRY="${{ secrets.ECR_REGISTRY }}"
             REPOSITORY_NAME="gcurealestate"
 
+            # Install Firebase CLI globally
+            sudo npm install -g firebase-tools
+
             # Authenticate Docker using the IAM role assigned to the EC2 instance
             aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+
+            # Start Firebase Emulator in the background (use tmux or nohup to keep it running after SSH disconnect)
+            nohup firebase emulators:start --only firestore,auth --project demo-firebase &
 
             # Pull the latest Docker image for the branch deployed to the test environment
             docker pull $ECR_REGISTRY/$REPOSITORY_NAME:${{ github.event.inputs.branch }}
@@ -84,7 +90,7 @@ jobs:
             docker rm test-container || true
 
             # Run the test container on port 8081
-            docker run -d --name test-container -p 8081:5001 $ECR_REGISTRY/$REPOSITORY_NAME:${{ github.event.inputs.branch }}
+            docker run -d --env PRODUCTION_MODE=false --name test-container -p 8081:5001 $ECR_REGISTRY/$REPOSITORY_NAME:${{ github.event.inputs.branch }}
 
             # restart nginx (probably would be fine without but for peace of mind)
             sudo systemctl restart nginx
