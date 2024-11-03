@@ -3,7 +3,6 @@ import { admin, firestore } from '../../../..';
 
 const router = Router();
 
-
 router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
@@ -18,7 +17,7 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
     //const uid = decodedToken.uid;                                    // For testing purposes, only expecting uid
     const uid = idToken; // For testing only
 
-    const userDoc = await firestore.collection('User').doc(uid).get();
+    const userDoc = await firestore.collection('User').doc(uid).collection('UserData').doc(uid).get()
 
     if (!userDoc.exists) {
       res.status(404).json({ message: 'User data not found' });
