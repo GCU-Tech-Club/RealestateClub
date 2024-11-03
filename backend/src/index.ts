@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import routeHandler from './routes/routeHandler'; // import the routes variable
 import admin from 'firebase-admin';
-//var serviceAccount = require("../firebase-sak.json");
+var serviceAccount = require("../firebase-sak.json");
 require('dotenv').config()
 const productionMode = process.env.PRODUCTION_MODE === 'true';
 
@@ -19,21 +19,24 @@ if (productionMode) {
   
   console.log('Using Live Firebase Data!');
 } else {
-  admin.initializeApp();
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
   console.log("Using Firebase Emulator.");
 }
 
 const firestore = admin.firestore();
 const auth = admin.auth();
 
+
 if (!productionMode) {
   firestore.settings({
-    host: '172.31.29.127:7001',
+    host: 'localhost:7001',
     projectId: 'gcurealestate-ae639',
     ssl: false,
   })
-  process.env.FIREBASE_AUTH_EMULATOR_HOST = '172.31.29.127:9099';
-  process.env.FIRESTORE_EMULATOR_HOST = '172.31.29.127:7001';
+  process.env.FIREBASE_AUTH_EMULATOR_HOST = 'localhost:9099';
+  process.env.FIRESTORE_EMULATOR_HOST = 'localhost:7001';
   console.log("Connected to Firestore and Auth emulators.");
 }
 
@@ -63,3 +66,5 @@ app.use('/', routeHandler);
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+export { admin, firestore };
