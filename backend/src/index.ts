@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import routeHandler from './routes/routeHandler'; // import the routes variable
 import admin from 'firebase-admin';
-var serviceAccount = require("../firebase-sak.json");
+//var serviceAccount = require("../firebase-sak.json");
 require('dotenv').config()
 const productionMode = process.env.PRODUCTION_MODE === 'true';
 
@@ -20,7 +20,7 @@ if (productionMode) {
   console.log('Using Live Firebase Data!');
 } else {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+    //credential: admin.credential.cert(serviceAccount), // Commented for testing purposes while auth isn't tested
   });
   console.log("Using Firebase Emulator.");
 }
