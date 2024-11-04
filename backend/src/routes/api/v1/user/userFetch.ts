@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 })
 */
 
-router.get('/firebase', async (req: Request, res: Response): Promise<void> => {
+router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
