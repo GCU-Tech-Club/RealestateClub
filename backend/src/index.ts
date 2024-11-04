@@ -19,9 +19,9 @@ if (productionMode) {
   
   console.log('Using Live Firebase Data!');
 } else {
-  admin.initializeApp({
-    //credential: admin.credential.cert(serviceAccount), // Commented for testing purposes while auth isn't tested
-  });
+  admin.initializeApp(
+    //{credential: admin.credential.cert(serviceAccount),} // Commented for testing purposes while auth isn't tested
+  );
   console.log("Using Firebase Emulator.");
 }
 
@@ -31,12 +31,12 @@ const auth = admin.auth();
 
 if (!productionMode) {
   firestore.settings({
-    host: '172.31.29.127:7001',
+    host: 'localhost:7001',
     projectId: 'gcurealestate-ae639',
     ssl: false,
   })
-  process.env.FIREBASE_AUTH_EMULATOR_HOST = '172.31.29.127:9099';
-  process.env.FIRESTORE_EMULATOR_HOST = '172.31.29.127:7001';
+  process.env.FIREBASE_AUTH_EMULATOR_HOST = 'localhost:9099';
+  process.env.FIRESTORE_EMULATOR_HOST = 'localhost:7001';
   console.log("Connected to Firestore and Auth emulators.");
 }
 
