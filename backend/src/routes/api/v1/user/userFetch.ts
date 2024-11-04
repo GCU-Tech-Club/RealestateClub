@@ -3,6 +3,14 @@ import { admin, firestore } from '../../../..';
 
 const router = Router();
 
+/*
+router.get('/', (req, res) => {
+  res.status(200).json({
+    message: "User has been fetched",
+    header: req.headers.authorization,
+  });
+})
+*/
 
 router.get('/firebase', async (req: Request, res: Response): Promise<void> => {
   try {
