@@ -19,12 +19,15 @@ if (productionMode) {
   
   console.log('Using Live Firebase Data!');
 } else {
-  admin.initializeApp();
+  admin.initializeApp(
+    //{credential: admin.credential.cert(serviceAccount),} // Commented for testing purposes while auth isn't tested
+  );
   console.log("Using Firebase Emulator.");
 }
 
 const firestore = admin.firestore();
 const auth = admin.auth();
+
 
 if (!productionMode) {
   firestore.settings({
@@ -63,3 +66,5 @@ app.use('/', routeHandler);
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+export { admin, firestore };

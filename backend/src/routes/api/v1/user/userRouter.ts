@@ -6,10 +6,10 @@ import userRead from './userFetch';
 
 const router = Router();
 
-router.use('/user', userCreate);
-router.use('/user', userDelete);
-router.use('/user', userUpdate);
-router.use('/user', userRead);
+router.use('/', userCreate);
+router.use('/', userDelete);
+router.use('/', userUpdate);
+router.use('/', userRead);
 
 
 export default router;
