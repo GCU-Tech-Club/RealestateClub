@@ -1,5 +1,5 @@
 # For running the environment on your local do the following commands
-`firebase emulators:start`
+`firebase emulators:start --import firebaseTestData --export-on-exit`
 now in another terminal
 `npm run dev`
 
@@ -25,4 +25,4 @@ to install the CLI tool use the following command (might require sudo if it fail
 `npm install -g firebase-tools`
 
 now to run the firebase emulator so you can work with auth and firestore locally run
-`firebase emulators:start`
+`firebase emulators:start --import firebaseTestData --export-on-exit`
