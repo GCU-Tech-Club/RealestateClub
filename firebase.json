@@ -6,14 +6,10 @@
   "emulators": {
     "singleProjectMode": true,
     "auth": {
-      "port": 9099,
-      "import": "./firebaseTestData/auth_export",
-      "exportOnExit": true
+      "port": 9099
     },
     "firestore": {
-      "port": 7001,
-      "import": "./firebaseTestData/firestore_export",
-      "exportOnExit": true
+      "port": 7001
     },
     "ui": {
       "enabled": true
