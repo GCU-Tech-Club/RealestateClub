@@ -3,31 +3,35 @@
 @tailwind utilities;
 
 body {
-    font-family: "Caudex", serif;
-    font-weight: 400;
-    font-style: normal;
+  font-family: "Caudex", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.font-inter {
+  font-family: "Inter", sans-serif;
 }
 
 .caudex-regular {
-    font-family: "Caudex", serif;
-    font-weight: 400;
-    font-style: normal;
-  }
-  
-  .caudex-bold {
-    font-family: "Caudex", serif;
-    font-weight: 700;
-    font-style: normal;
-  }
-  
-  .caudex-regular-italic {
-    font-family: "Caudex", serif;
-    font-weight: 400;
-    font-style: italic;
-  }
-  
-  .caudex-bold-italic {
-    font-family: "Caudex", serif;
-    font-weight: 700;
-    font-style: italic;
-  }
+  font-family: "Caudex", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.caudex-bold {
+  font-family: "Caudex", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.caudex-regular-italic {
+  font-family: "Caudex", serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.caudex-bold-italic {
+  font-family: "Caudex", serif;
+  font-weight: 700;
+  font-style: italic;
+}
