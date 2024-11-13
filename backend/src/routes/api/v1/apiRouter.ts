@@ -4,7 +4,7 @@ import authMiddleware from './middleware/authMiddleware';
 
 const router = Router();
 
-// User Routes
+// User Routes with authentication middleware
 router.use('/user', authMiddleware, userRouter);
 
 

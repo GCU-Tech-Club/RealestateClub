@@ -1,13 +1,13 @@
 import { Router, Request, Response } from 'express';
-import { admin, firestore } from '../../../..';
+import { firestore } from '../../../..';
 
 const router = Router();
 
 
 router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
-    const uid = req.body.token.uid
-    const userDoc = await firestore.collection('Users').doc(uid).get()
+    const uid = req.body.uid;
+    const userDoc = await firestore.collection('Users').doc(uid).get();
 
     if (!userDoc.exists) {
       res.status(404).json({ message: 'User data not found' });

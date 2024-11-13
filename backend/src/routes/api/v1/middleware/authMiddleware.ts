@@ -1,8 +1,5 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { admin, firestore } from '../../../..';
-import { getParsedCommandLineOfConfigFile } from 'typescript';
-
-//const router = Router();
+import { Request, Response, NextFunction } from 'express';
+import { admin } from '../../../..';
 
 
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
@@ -13,26 +10,20 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
             return;
         }
         const idToken = authToken.split('Bearer ')[1];
-        console.log("header split");
-        console.log(idToken);
-        try {
+    
+        if (process.env.PRODUCTION_MODE === 'true') {
             const decodedToken = await admin.auth().verifyIdToken(idToken);
-            console.log("token decoded");
+            req.body = decodedToken;
         }
-        catch (error) {
-            console.log("middleware error");
-            console.log(error);
+        else {
+            req.body = {
+                uid: idToken
+            };
         }
-        
-        //decodedToken = decodedToken.uid;  //If wanting to only send back the uid
-
-        req.body = req.body || {};
-        //req.body.token = decodedToken;
-
         next();
-        return;
+
     } catch (error) {
-        res.status(401).send({"error middleware": error});
+        res.status(401).send({"auth error": error});
         return;
     }
 }

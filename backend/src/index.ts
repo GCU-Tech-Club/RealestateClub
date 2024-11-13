@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import routeHandler from './routes/routeHandler'; // import the routes variable
 import admin from 'firebase-admin';
-var serviceAccount = require("../../firebase-sak.json");
+// var serviceAccount = require("../../firebase-sak.json");
 require('dotenv').config()
 const productionMode = process.env.PRODUCTION_MODE === 'true';
 
@@ -19,58 +19,21 @@ if (productionMode) {
   
   console.log('Using Live Firebase Data!');
 } else {
-  admin.initializeApp(
-    {credential: admin.credential.cert(serviceAccount),} // Commented for testing purposes while auth isn't tested
-  );
+  admin.initializeApp();
   console.log("Using Firebase Emulator.");
 }
 
 const firestore = admin.firestore();
 const auth = admin.auth();
 
-//------------------------------------------------------------ 
-/**
- * Generate JWT for testing purposes from a Firebase UID
- * @param {string} uid - Firestore user ID (UID)
- * @returns {Promise<string>} - A JWT token for the given UID
- */
-
-/*
-async function generateTestJWT(uid: string): Promise<string> {
-  try {
-    const token = await admin.auth().createCustomToken(uid);
-    return token;
-  } catch (error) {
-    console.error("Error creating custom token:", error);
-    throw new Error("Token creation failed");
-  }
-}
-
-// Sample usage to generate a test token for a specific UID
-(async () => {
-  try {
-    const uid = "2x4U5m7ARZlxAGkINnw7BotcX18d"; // Replace with an actual Firestore UID
-    const jwt = await generateTestJWT(uid);
-    console.log("Generated JWT:", jwt);
-  } catch (error) {
-    console.error("Error generating test JWT:", error);
-  }
-})();
-
-*/
-//------------------------------------------------------------------------------
-
 if (!productionMode) {
   firestore.settings({
-    //host: '172.31.29.127:7001',
-    host: 'localhost:7001',
+    host: '172.31.29.127:7001', // Switch to localhost for personal development
     projectId: 'gcurealestate-ae639',
     ssl: false,
   })
-  //process.env.FIREBASE_AUTH_EMULATOR_HOST = '172.31.29.127:9099';
-  //process.env.FIRESTORE_EMULATOR_HOST = '172.31.29.127:7001';
-  process.env.FIREBASE_AUTH_EMULATOR_HOST = 'localhost:9099';
-  process.env.FIRESTORE_EMULATOR_HOST = 'localhost:7001';
+  process.env.FIREBASE_AUTH_EMULATOR_HOST = '172.31.29.127:9099'; // Switch to localhost for personal development
+  process.env.FIRESTORE_EMULATOR_HOST = '172.31.29.127:7001'; // Switch to localhost for personal development
   console.log("Connected to Firestore and Auth emulators.");
 }
 
