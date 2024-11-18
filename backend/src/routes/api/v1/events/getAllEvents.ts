@@ -1,11 +1,11 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
 import { firestore } from '../../../..';
 
 const router = Router();
 
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', async (req, res) => {
     const page = parseInt(req.query.page as string) || 1;
-    const pageSize = 2;
+    const pageSize = 10;
 
     try {
         const eventsCollection = firestore.collection("Events");
@@ -29,7 +29,7 @@ router.get('/', async (req: Request, res: Response) => {
           ...doc.data(),
         }));
         
-        res.status(200).json({ page, pageSize, totalEvents: events.length, data: events })
+        res.status(200).json({ page, pageSize, totalEvents: events.length, events: events })
         
     } catch (error) {
         res.status(500).json({ message: "Error fetching events", error: error })

@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import getEvents from './getEvents';
+import getAllEvents from './getAllEvents';
 
 const router = Router();
 
-router.use('/', getEvents)
+router.use('/', getAllEvents)
 
 export default router
