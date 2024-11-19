@@ -40,7 +40,7 @@ export const EventComponent = ({ event }: EventComponentProps) => {
   return (
     <div key={event.id} className="w-96 text-black font-inter rounded-xl shadow-lg">
       <div className="relative">
-        <img src={event.icon} className="w-full rounded-t-xl blur-[1px]" />
+        <img src={event.icon} className="w-full overflow-hidden rounded-t-xl blur-[1px]" />
         <div className="p-5 absolute bottom-0 left-0 = z-10 text-white rounded-br-xl">
           <h1 className="font-bold text-3xl">{formatDate(event.date)}</h1>
           <span className="font-bold text-xl">{formatTime(event.date)} • {event.location}</span>

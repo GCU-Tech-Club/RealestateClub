@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-gray-800 text-white py-6">
+    <footer className="absolute bottom-0 w-screen border-t bg-gray-50 text-black py-6">
       <div className="container mx-auto text-center md:flex md:justify-between">
         {/* Logo or Brand Name */}
         <div className="mb-4 md:mb-0">
@@ -11,10 +11,9 @@ const Footer: React.FC = () => {
 
         {/* Links */}
         <div className="flex justify-center space-x-6 mb-4 md:mb-0">
-          <a href="#" className="text-gray-400 hover:text-white">Home</a>
-          <a href="#" className="text-gray-400 hover:text-white">About</a>
-          <a href="#" className="text-gray-400 hover:text-white">Services</a>
-          <a href="#" className="text-gray-400 hover:text-white">Contact</a>
+          <a href="#" className="text-gray-400 hover:text-blue">Grand </a>
+          <a href="#" className="text-gray-400 hover:text-white">Canyon</a>
+          <a href="#" className="text-gray-400 hover:text-white">University</a>
         </div>
 
         {/* Social Icons */}

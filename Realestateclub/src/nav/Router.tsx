@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Home from '../pages/home';
 import Login from '../pages/login';
 import Navbar from './Navbar';
@@ -10,14 +10,15 @@ import Register from '../pages/register';
 import SampleComponent from '../components/SampleComponent';
 import EventComponent from '../components/EventComponent';
 import EventCarouselComponent from '../components/EventCarouselComponent';
-import Footer from '../../footer/Footer';
+import Footer from '../components/Footer';
 
 const Router: React.FC = () => {
   return (
     <BrowserRouter>
       <Navbar/>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Navigate to="/home" />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/event" element={<Events />} />
@@ -40,5 +41,4 @@ const Router: React.FC = () => {
     </BrowserRouter>
   );
 };
-
 export default Router;

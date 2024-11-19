@@ -1,6 +1,6 @@
 
-import './css/app.css'
 import Router from './nav/Router'
+import './util/firebase'
 
 function App() {
 
