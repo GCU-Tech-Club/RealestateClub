@@ -1,10 +1,14 @@
-import './App.css'
+
+import './css/app.css'
 import Router from './nav/Router'
 
 function App() {
 
   return (
-    <Router />
+    <div className="h-screen w-screen bg-blue-50 flex flex-col">
+      <Router />
+    
+    </div>
   )
 }
 
