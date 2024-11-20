@@ -13,12 +13,11 @@ import EventCarouselComponent from '../components/EventCarouselComponent';
 import Footer from '../components/Footer';
 
 const Router: React.FC = () => {
-  return (
+  return ( // get jiggy with it
     <BrowserRouter>
       <Navbar/>
       <Routes>
-        <Route path="/" element={<Navigate to="/home" />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/event" element={<Events />} />
