@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 
 const Login: React.FC = () => {
@@ -7,13 +7,16 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const navigator = useNavigate()
 
   const auth = getAuth()
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
-      await signInWithEmailAndPassword(auth, email, password)
+      const user = await signInWithEmailAndPassword(auth, email, password)
+      console.log(user)
+      navigator('/accounts')
     } catch (error) {
         if (error instanceof Error) {
           setError(error.message)
@@ -50,7 +53,7 @@ const Login: React.FC = () => {
           }
           </button>
         </div>
-        <Link type="submit" className="p-3 bg-amber-500 hover:bg-amber-600 text-white rounded-lg" to="/account">Login</Link>
+        <button type="submit" className="p-3 bg-amber-500 hover:bg-amber-600 text-white rounded-lg">Login</button>
       </form>
       <div>
         New to real estate club?
