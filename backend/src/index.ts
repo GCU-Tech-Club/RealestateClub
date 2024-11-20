@@ -1,12 +1,16 @@
 import express, { Request, Response } from 'express';
 import routeHandler from './routes/routeHandler'; // import the routes variable
 import admin from 'firebase-admin';
+import cors from 'cors';
+
 // var serviceAccount = require("../../firebase-sak.json");
 require('dotenv').config()
 const productionMode = process.env.PRODUCTION_MODE === 'true';
 
 const app = express();
 const port = 5001;
+
+app.use(cors());
 
 // Initialize Firebase Admin SDK
 if (productionMode) {
