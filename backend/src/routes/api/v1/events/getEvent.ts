@@ -5,14 +5,18 @@ const router = Router();
 
 router.get('/:id', async (req, res) => {
     try {
-        const id = req.params.id
-        const eventDoc = await firestore.collection('Events').doc(id).get();
+        const id: string = req.params.id
+        const eventDoc: FirebaseFirestore.DocumentSnapshot = await firestore.collection('Events').doc(id).get();
 
         if (!eventDoc.exists) {
             res.status(400).json({message: 'Event data not found'});
         };
 
-        const eventData = { ...eventDoc.data() };
+        interface EventData {
+            [key: string]: unknown;
+        }
+
+        const eventData: EventData = { ...eventDoc.data() };
 
         res.status(200).json({
             eventData: eventData
