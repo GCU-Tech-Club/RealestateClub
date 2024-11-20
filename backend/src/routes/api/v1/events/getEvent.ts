@@ -39,9 +39,7 @@ router.get('/:id', async (req, res) => {
             eventData: formattedEventData
         });
     } catch (error) {
-        res.status(500).json({
-            error: error
-        });
+        res.status(500).json({ message: "Error fetching event", error: error instanceof Error ? error.message : error })
     }
 });
 

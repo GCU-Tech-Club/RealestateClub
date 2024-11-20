@@ -1,14 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { firestore } from '../../../..';
+import { UserData } from '../../../types/userTypes';
 
 const router = Router();
-
-interface UserData {
-  UID: string;
-  Name: string;
-  Bio: string;
-  Major: string;
-}
 
 router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
@@ -32,9 +26,7 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
       userData: userData,
     });
   } catch (error) {
-    res.status(500).json({
-      error: error,
-    });
+    res.status(500).json({ message: "Error fetching user", error: error instanceof Error ? error.message : error })
   }
 });
 
