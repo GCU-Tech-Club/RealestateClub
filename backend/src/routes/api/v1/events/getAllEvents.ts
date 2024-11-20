@@ -1,7 +1,18 @@
 import { Router } from 'express';
 import { firestore } from '../../../..';
+import { Timestamp } from "firebase/firestore";
 
 const router = Router();
+
+interface EventDocument {
+  UID: string;
+  Name: string;
+  Location: string;
+  Time: Timestamp;
+  Description: string;
+  Registered: string[];
+  Attended: string[];
+}
 
 router.get('/', async (req, res) => {
     const page: number = parseInt(req.query.page as string) || 1;
@@ -25,9 +36,18 @@ router.get('/', async (req, res) => {
         }
     
         const snapshot: FirebaseFirestore.QuerySnapshot = await query.get();
-        const events: Array<Record<string, unknown>> = snapshot.docs.map(doc => ({
-          ...doc.data(),
-        }));
+        const events = snapshot.docs.map(doc => {
+          const data = doc.data() as EventDocument;
+          return {
+            UID: data.UID,
+            Name: data.Name,
+            Location: data.Location,
+            Time: data.Time.toDate(),
+            Description: data.Description,
+            Registered: data.Registered,
+            Attended: data.Attended,
+          };
+        });
         
         res.status(200).json({ page, pageSize, totalEvents: events.length, events: events })
         

@@ -5,6 +5,6 @@ import getEvent from './getEvent';
 const router = Router();
 
 router.use('/', getAllEvents)
-router.use('/test', getEvent)
+router.use('/', getEvent)
 
 export default router

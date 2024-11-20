@@ -3,10 +3,22 @@ import { firestore } from '../../../..';
 
 const router = Router();
 
+interface UserData {
+  UID: string;
+  Name: string;
+  Bio: string;
+  Major: string;
+}
 
 router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
     const uid: string = req.body.uid;
+
+    if (!uid) {
+      res.status(400).json({ message: 'UID is required'});
+      return;
+    }
+
     const userDoc: FirebaseFirestore.DocumentSnapshot = await firestore.collection('Users').doc(uid).get();
 
     if (!userDoc.exists) {
@@ -14,10 +26,7 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    interface UserData {
-      [Key: string]: string;
-    }
-    const userData: UserData = { ...userDoc.data() };
+    const userData = userDoc.data() as UserData;
     
     res.status(200).json({
       userData: userData,
