@@ -1,13 +1,13 @@
-import './App.css'
+
+import Router from './nav/Router'
+import './util/firebase'
 
 function App() {
 
   return (
-    <div className="bg-black w-screen h-screen flex flex-col items-center justify-center">
-      <h1 className="text-white text-4xl">
-        REALESTATECLUB
-      </h1>
-      <p className="italic text-white">Template App</p>
+    <div className="h-screen w-screen bg-blue-50 flex flex-col">
+      <Router />
+    
     </div>
   )
 }
