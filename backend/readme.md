@@ -12,12 +12,12 @@ Run the following command to run the container from an already built image:
 
 # After running the Deploy to Test Workflow:
 You can visit this URL to see your changes on the server
-[http://ec2-3-101-123-79.us-west-1.compute.amazonaws.com:8080](http://ec2-54-215-43-213.us-west-1.compute.amazonaws.com:8080)
+http://ec2-54-215-43-213.us-west-1.compute.amazonaws.com:8080
 
 # When a branch gets merged to main:
 when your branches' changes get merged to main the prod.yml
 workflow will run. When the workflow finishes your changes will reflect on
-[http://ec2-3-101-123-79.us-west-1.compute.amazonaws.com](http://ec2-54-215-43-213.us-west-1.compute.amazonaws.com)
+http://ec2-54-215-43-213.us-west-1.compute.amazonaws.com
 
 
 # FIREBASE
