@@ -5,7 +5,7 @@ const router = Router();
 
 router.get('/:id', async (req, res) => {
     try {
-        const id = req.params['id']
+        const id = req.params.id
         const eventDoc = await firestore.collection('Events').doc(id).get();
 
         if (!eventDoc.exists) {
