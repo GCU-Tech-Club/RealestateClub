@@ -59,6 +59,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
+          
           script: |
             REGION="${{ secrets.AWS_REGION }}"
             ECR_REGISTRY="${{ secrets.ECR_REGISTRY_PROD }}"
@@ -75,7 +76,7 @@ jobs:
             docker rm prod-container || true
 
             # Run the container on port 9091
-            docker run -d --name prod-container -p 9091:5001 $ECR_REGISTRY/$REPOSITORY_NAME:main
+            docker run -d --env PRODUCTION_MODE=true --env FIREBASE_SAK=${{ secrets.FIREBASE_SAK }} --name prod-container -p 9091:5001 $ECR_REGISTRY/$REPOSITORY_NAME:main
 
             # restart nginx (probably would be fine without but for peace of mind)
             sudo systemctl restart nginx

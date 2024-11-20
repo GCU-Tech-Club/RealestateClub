@@ -84,7 +84,7 @@ jobs:
             docker rm test-container || true
 
             # Run the test container on port 8081
-            docker run -d --name test-container -p 8081:5001 $ECR_REGISTRY/$REPOSITORY_NAME:${{ github.event.inputs.branch }}
+            docker run -d --env PRODUCTION_MODE=false --name test-container -p 8081:5001 $ECR_REGISTRY/$REPOSITORY_NAME:${{ github.event.inputs.branch }}
 
             # restart nginx (probably would be fine without but for peace of mind)
             sudo systemctl restart nginx
