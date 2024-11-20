@@ -32,7 +32,7 @@ const Accounts: React.FC = () => {
         <TextComponent title={'Major'} body={sampleUser.major} />
         <h3 className="border-b mt-5 text-gray-500 text-sm">All Registered Events</h3>
         <h3 className="border-b mt-5 text-gray-500 text-sm">Previously Attended Events</h3>
-        <TextComponent title={'Date Registered'} body={sampleUser.dateRegistered.toString()} />
+        <TextComponent title={'Date Registered'} body={sampleUser.dateRegistered.getDate() + ' ' + sampleUser.dateRegistered.getMonth().toString() + ', ' + sampleUser.dateRegistered.getFullYear()} />
       </div>
     </div>
   );

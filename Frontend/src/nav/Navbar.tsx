@@ -7,7 +7,7 @@ const Navbar = () => {
       <div className="flex gap-2">
         
         <img src="images/logo.jpg" alt="logo" className="w-10 h-10 rounded-full" />
-        <Link to="/home" className="font-semibold text-2xl text-gray-700 hover:text-black">Realestate Club</Link>
+        <Link to="/" className="font-semibold text-2xl text-gray-700 hover:text-black">Realestate Club</Link>
       </div>
       <div className="flex gap-4 px-5">
         <NavLink to="home" className="">Home</NavLink>
