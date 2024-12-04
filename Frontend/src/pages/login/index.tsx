@@ -30,19 +30,19 @@ const Login: React.FC = () => {
       {error && <p>{error}</p>}
       <form className="flex flex-col gap-4" onSubmit={handleLogin}>
         <input 
-          type="email" 
+          type="email"
           className="border-2 border-gray-300 p-2 rounded-lg shadow-lg"
-          placeholder="Email" 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <div className="flex items-center relative password">
         <input
-          type={showPassword ? "text" : "password"} 
+          type={showPassword ? "text" : "password"}
           className="border-2 border-gray-300 p-2 rounded-lg shadow-lg"
-          placeholder="Password" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
           <button onClick={(e) => {setShowPassword(!showPassword);e.preventDefault()}} className="absolute inset right-2">
             {showPassword ? (

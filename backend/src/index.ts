@@ -1,12 +1,16 @@
 import express, { Request, Response } from 'express';
 import routeHandler from './routes/routeHandler'; // import the routes variable
 import admin from 'firebase-admin';
+import cors from 'cors';
+
 // var serviceAccount = require("../../firebase-sak.json");
 require('dotenv').config()
 const productionMode = process.env.PRODUCTION_MODE === 'true';
 
 const app = express();
 const port = 5001;
+
+app.use(cors());
 
 // Initialize Firebase Admin SDK
 if (productionMode) {
@@ -28,12 +32,12 @@ const auth = admin.auth();
 
 if (!productionMode) {
   firestore.settings({
-    host: '172.31.29.127:7001', // Switch to localhost for personal development
+    host: '127.0.0.1:7001', // Switch to 127.0.0.1 for personal development
     projectId: 'gcurealestate-ae639',
     ssl: false,
   })
-  process.env.FIREBASE_AUTH_EMULATOR_HOST = '172.31.29.127:9099'; // Switch to localhost for personal development
-  process.env.FIRESTORE_EMULATOR_HOST = '172.31.29.127:7001'; // Switch to localhost for personal development
+  process.env.FIREBASE_AUTH_EMULATOR_HOST = '127.0.0.1:9099'; // Switch to 127.0.0.1 for personal development
+  process.env.FIRESTORE_EMULATOR_HOST = '127.0.0.1:7001'; // Switch to 127.0.0.1 for personal development
   console.log("Connected to Firestore and Auth emulators.");
 }
 
