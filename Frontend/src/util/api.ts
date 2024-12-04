@@ -19,6 +19,36 @@ export default class APIWrapper {
             registered: [],
             attended: []
         });
+        this.dummyEvents.push({
+            UID: "245fdf61-d058-4cfe-b2dc-ad0f79d8d379",
+            icon: 'https://i.ytimg.com/vi/PaprAoCWe2M/hq720.jpg?sqp=-oaymwEpCNAFEJQDSFryq4qpAxsIARUAAIhCGAHYAQHiAQwIHBACGAYgATgBQAE=&rs=AOn4CLDCnuwwV7sV3dgj3e_WUh1IB59Jag',
+            location: "idk",
+            event_name: "Fall Break",
+            date: new Date(),
+            description: `Yay!!!. `,
+            registered: [],
+            attended: []
+        });
+        this.dummyEvents.push({
+            UID: "7d345f34-d058-4cfe-b2dc-ad0f79d8d379",
+            icon: 'https://i.ytimg.com/vi/PaprAoCWe2M/hq720.jpg?sqp=-oaymwEpCNAFEJQDSFryq4qpAxsIARUAAIhCGAHYAQHiAQwIHBACGAYgATgBQAE=&rs=AOn4CLDCnuwwV7sV3dgj3e_WUh1IB59Jag',
+            location: "Chick-Fil-A",
+            event_name: "Discounts",
+            date: new Date(),
+            description: `free food holy moly!`,
+            registered: [],
+            attended: []
+        });
+        this.dummyEvents.push({
+            UID: "7d345f34-d058-4cfe-b2dc-d39f79d8d379",
+            icon: 'https://i.ytimg.com/vi/PaprAoCWe2M/hq720.jpg?sqp=-oaymwEpCNAFEJQDSFryq4qpAxsIARUAAIhCGAHYAQHiAQwIHBACGAYgATgBQAE=&rs=AOn4CLDCnuwwV7sV3dgj3e_WUh1IB59Jag',
+            location: "Panda Express",
+            event_name: "Free orange chicken bowl",
+            date: new Date(),
+            description: `free food holy moly!`,
+            registered: [],
+            attended: []
+        });
     }
 
     async fetchEvents(): Promise<Event[]> {
@@ -30,7 +60,7 @@ export default class APIWrapper {
         const loadedEvents: unknown = await axios.get(this.api + "/events")
             .then(res => res?.data ?? null)
             .catch((error) => {
-                console.error(error);
+                console.log(error);
                 return this.dummyEvents;
             });
 

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { firestore } from '../../../..';
-import { EventData } from '../../../../types/eventTypes';
+import { Event } from '../../../../types';
 
 const router = Router();
 
@@ -27,12 +27,12 @@ router.get('/', async (req, res) => {
     
         const snapshot: FirebaseFirestore.QuerySnapshot = await query.get();
         const events = snapshot.docs.map(doc => {
-          const data = doc.data() as EventData;
+          const data = doc.data() as Event;
           return {
             UID: data.UID,
-            Name: data.Name,
+            Name: data.Event_Name,
             Location: data.Location,
-            Time: data.Time.toDate(),
+            Time: data.Date,
             Description: data.Description,
             Registered: data.Registered,
             Attended: data.Attended,
