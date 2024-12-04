@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
 
         {/* Links */}
         <div className="flex justify-center space-x-6 mb-4 md:mb-0">
-          <a href="#" className="text-gray-400 hover:text-blue">Grand </a>
+          <a href="#" className="text-gray-400 hover:text-white">Grand </a>
           <a href="#" className="text-gray-400 hover:text-white">Canyon</a>
           <a href="#" className="text-gray-400 hover:text-white">University</a>
         </div>
