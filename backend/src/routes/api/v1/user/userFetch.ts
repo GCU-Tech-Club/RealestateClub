@@ -6,7 +6,7 @@ const router = Router();
 
 router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
-    const uid: string = req.body.uid;
+    const uid: string = req.body.UID;
 
     if (!uid) {
       res.status(400).json({ message: 'UID is required'});

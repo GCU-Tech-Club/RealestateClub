@@ -32,12 +32,12 @@ const auth = admin.auth();
 
 if (!productionMode) {
   firestore.settings({
-    host: '172.31.29.127:7001', // Switch to localhost for personal development
+    host: 'localhost:7001', // Switch to localhost for personal development
     projectId: 'gcurealestate-ae639',
     ssl: false,
   })
-  process.env.FIREBASE_AUTH_EMULATOR_HOST = '172.31.29.127:9099'; // Switch to localhost for personal development
-  process.env.FIRESTORE_EMULATOR_HOST = '172.31.29.127:7001'; // Switch to localhost for personal development
+  process.env.FIREBASE_AUTH_EMULATOR_HOST = 'localhost:9099'; // Switch to localhost for personal development
+  process.env.FIRESTORE_EMULATOR_HOST = 'localhost:7001'; // Switch to localhost for personal development
   console.log("Connected to Firestore and Auth emulators.");
 }
 
