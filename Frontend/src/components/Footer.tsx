@@ -2,11 +2,11 @@ import React from 'react';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="absolute bottom-0 w-screen border-t bg-gray-50 text-black py-6">
+    <footer className="bottom-0 w-screen border-t bg-gray-50 text-black py-6">
       <div className="container mx-auto text-center md:flex md:justify-between">
         {/* Logo or Brand Name */}
         <div className="mb-4 md:mb-0">
-          <h1 className="text-2xl font-bold">Real State Club</h1>
+          <h1 className="text-2xl font-bold">Real Estate Club</h1>
         </div>
 
         {/* Links */}

@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { firestore } from '../../../..';
-import { UserData } from '../../../types/userTypes';
+import { UserData } from '../../../../types/userTypes';
 
 const router = Router();
 
