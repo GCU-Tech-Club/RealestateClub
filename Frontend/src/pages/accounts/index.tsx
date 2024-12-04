@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import EventCarouselComponent from '../../components/EventCarouselComponent'
 import eventsService from '../../util/eventsService';
-import { Event } from '../../types/event';
+import { Event } from '../../types/eventTypes';
 interface UserObject {
   name: string
   email: string

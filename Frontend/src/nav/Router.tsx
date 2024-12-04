@@ -12,7 +12,7 @@ import EventComponent from '../components/EventComponent';
 import EventCarouselComponent from '../components/EventCarouselComponent';
 import Footer from '../components/Footer';
 import eventsService from '../util/eventsService';
-import { Event } from '../types/event';
+import { Event } from '../types/eventTypes';
 
 const Router: React.FC = () => {
 
