@@ -32,12 +32,12 @@ const auth = admin.auth();
 
 if (!productionMode) {
   firestore.settings({
-    host: '127.0.0.1:7001', // Switch to 127.0.0.1 for personal development
+    host: '172.31.29.127:7001', // Switch to 127.0.0.1 for personal development
     projectId: 'gcurealestate-ae639',
     ssl: false,
   })
-  process.env.FIREBASE_AUTH_EMULATOR_HOST = '127.0.0.1:9099'; // Switch to 127.0.0.1 for personal development
-  process.env.FIRESTORE_EMULATOR_HOST = '127.0.0.1:7001'; // Switch to 127.0.0.1 for personal development
+  process.env.FIREBASE_AUTH_EMULATOR_HOST = '172.31.29.127:9099'; // Switch to 127.0.0.1 for personal development
+  process.env.FIRESTORE_EMULATOR_HOST = '172.31.29.127:7001'; // Switch to 127.0.0.1 for personal development
   console.log("Connected to Firestore and Auth emulators.");
 }
 
