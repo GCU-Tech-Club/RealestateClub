@@ -12,10 +12,7 @@ const Events: React.FC = () => {
   const { api } = React.useContext(AppContext);
 
   useEffect(() => {
-    api.fetchEvents().then(events => {
-      console.log(events);
-      setEvents(events);
-    });
+    api.fetchEvents().then(events => setEvents(events));
   }, [api]);
 
   return (
