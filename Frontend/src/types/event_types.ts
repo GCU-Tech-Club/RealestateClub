@@ -1,12 +1,12 @@
 export interface Event {
   UID: string;
   icon?: string;
-  date: Date;
-  location: string
-  event_name: string;
-  description: string;
-  registered: string[];
-  attended: string[];
+  Date: Date;
+  Location: string
+  EventName: string;
+  Description: string;
+  Registered: string[];
+  Attended: string[];
 }
 
 export interface EventRest {
