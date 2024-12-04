@@ -1,5 +1,5 @@
 
-import Router from './nav/Router'
+import Router from './nav/router'
 import './util/firebase'
 
 function App() {
