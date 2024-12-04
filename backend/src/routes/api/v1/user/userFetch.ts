@@ -7,7 +7,12 @@ const router = Router();
 
 router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
-    const uid: string = (req.body as DecodedIdToken).uid;
+    let uid: string;
+    if (process.env.PRODUCTION_MODE === 'true') {
+      uid = (req.body as DecodedIdToken).uid;
+    } else {
+      uid = req.body.uid;
+    }
 
     if (!uid) {
       res.status(400).json({ message: 'UID is required'});
