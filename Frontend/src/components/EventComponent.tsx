@@ -1,5 +1,5 @@
 import { FaRegCalendarAlt } from "react-icons/fa";
-import { Event } from "../types/event";
+import { Event } from "../types/eventTypes";
 import { formatDate, formatTime } from "../util/util";
 
 interface EventComponentProps {

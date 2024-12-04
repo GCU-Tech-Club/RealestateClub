@@ -1,4 +1,4 @@
-import { Event } from "../types/event";
+import { Event } from "../types/";
 
 
 const sampleEvents: Event[] = [
@@ -71,14 +71,15 @@ class eventsService {
      * Gets the sameple data from 
      */
     static async getEvents(): Promise<Event[]> {
-        return sampleEvents;
+        return this.getActualEvents()
     }
     static async getActualEvents(): Promise<Event[]> {
         console.log('Fetching events from Firebase...', api)
-        const response = await fetch(api, { mode: 'no-cors'});
+        const response = await fetch(api);
+        console.log(response)
         const data = await response.json();
         console.log('Firebase Data: ', data)
-        return data;
+        return data.events;
     }
 }
 

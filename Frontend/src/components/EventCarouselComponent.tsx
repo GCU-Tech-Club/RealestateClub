@@ -1,5 +1,5 @@
 import EventComponent from './EventComponent'
-import { Event } from '../types/event'
+import { Event } from '../types/eventTypes'
 
 interface EventCarouselComponentProps {
     events: Event[]
