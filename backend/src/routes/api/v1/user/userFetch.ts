@@ -1,12 +1,13 @@
 import { Router, Request, Response } from 'express';
 import { firestore } from '../../../..';
-import { UserData } from '../../../../types/userTypes';
+import { User } from '../../../../types/userTypes';
+import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
 
 const router = Router();
 
 router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
-    const uid: string = req.body.uid;
+    const uid: string = (req.body as DecodedIdToken).uid;
 
     if (!uid) {
       res.status(400).json({ message: 'UID is required'});
@@ -20,7 +21,7 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const userData = userDoc.data() as UserData;
+    const userData = userDoc.data() as User;
     
     res.status(200).json({
       userData: userData,

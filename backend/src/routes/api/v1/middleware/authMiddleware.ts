@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { admin } from '../../../..';
 
-
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
     try {
         const authToken = req.headers.authorization;
@@ -13,7 +12,12 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
     
         if (process.env.PRODUCTION_MODE === 'true') {
             const decodedToken = await admin.auth().verifyIdToken(idToken);
-            req.body = decodedToken;
+            if ('UID' in decodedToken && 'Name' in decodedToken && 'Bio' in decodedToken && 'Major' in decodedToken) {
+                req.body = decodedToken;
+            } else {
+                res.status(401).send({"error": "Invalid user data types"});
+                return;
+            }
         }
         else {
             req.body = {
