@@ -5,6 +5,6 @@ export interface Event {
   location: string
   event_name: string;
   description: string;
-  Registered: string[];
-  Attended: string[];
+  registered: string[];
+  attended: string[];
 }
