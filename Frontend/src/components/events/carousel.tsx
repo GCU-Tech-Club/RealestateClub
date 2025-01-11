@@ -52,4 +52,4 @@ const EventCarouselComponent: React.FC<EventCarouselComponentProps> = ({ events 
     )
 }
 
-export default EventCarouselComponent
+export default EventCarouselComponent;

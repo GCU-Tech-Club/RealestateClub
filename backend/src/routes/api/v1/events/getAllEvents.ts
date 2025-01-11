@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
           const data = doc.data() as Event;
           return {
             UID: data.UID,
-            Name: data.Event_Name,
+            Name: data.EventName,
             Location: data.Location,
             Time: data.Date,
             Description: data.Description,
