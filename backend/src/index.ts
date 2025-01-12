@@ -32,7 +32,9 @@ const auth = admin.auth();
 
 if (!productionMode) {
   firestore.settings({
-    host: '172.31.29.127:7001', // Switch to 127.0.0.1 for personal development
+    // TODO
+    host: '172.31.29.127:7001', // Switch to 127.0.0.1 for personal development, in prod or test switch to 172.31.29.127. 
+    // this at some point needs to be added to the github secrets so we don't have to worry about switching it every time
     projectId: 'gcurealestate-ae639',
     ssl: false,
   })
