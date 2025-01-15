@@ -3,17 +3,15 @@ import routeHandler from './routes/routeHandler'; // import the routes variable
 import admin from 'firebase-admin';
 import cors from 'cors';
 
-var os = require('os');
-var networkInterfaces = os.networkInterfaces();
-
 // var serviceAccount = require("../../firebase-sak.json");
 require('dotenv').config()
 const productionMode = process.env.PRODUCTION_MODE === 'true';
 
+var os = require('os');
 function getIpAddress(internal: boolean = false): string | null {
-  const interfaces = os.networkInterfaces();
-  for (const interfaceName in interfaces) {
-    for (const info of interfaces[interfaceName]) {
+  const networkInterfaces = os.networkInterfaces();
+  for (const interfaceName in networkInterfaces) {
+    for (const info of networkInterfaces[interfaceName]) {
       if (info.internal === internal && info.family === 'IPv4') {
         return info.address;
       }
@@ -22,12 +20,8 @@ function getIpAddress(internal: boolean = false): string | null {
   return null;
 }
 
-//const testServerIP = String(networkInterfaces['en0'][1].address) || '172.31.29.127';
-//const testServerIP = String(networkInterfaces['eth0'][0].address);
-//const localServerIP = String(networkInterfaces['lo0'][0].address); // External IP: 172.24.250.123
-
-const testServerIP = getIpAddress(false);
-const localServerIP = getIpAddress(true); // External IP: 172.24.250.123
+const testServerIP = getIpAddress(false) || '172.31.29.127';
+const localServerIP = getIpAddress(true) || '127.0.0.1';
 
 const ipAddress = productionMode ? testServerIP : localServerIP;
 
