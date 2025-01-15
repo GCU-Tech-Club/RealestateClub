@@ -17,13 +17,20 @@ function getIpAddress(internal: boolean = false): string | null {
       }
     }
   }
-  return null;
+  throw new Error(`No ${internal ? 'internal' : 'external'} IP address found`);
 }
 
-const testServerIP = getIpAddress(false) || '172.31.29.127';
-const localServerIP = getIpAddress(true) || '127.0.0.1';
+let testServerIP: string | null;
+let localServerIP: string | null;
+let ipAddress: string | null;
 
-const ipAddress = productionMode ? testServerIP : localServerIP;
+try {
+  testServerIP = getIpAddress(false);
+  localServerIP = getIpAddress(true);
+  ipAddress = productionMode ? testServerIP : localServerIP;
+} catch (error) {
+  throw new Error(`Failed to get IP address: ${error}`);
+}
 
 const app = express();
 const port = 5001;
