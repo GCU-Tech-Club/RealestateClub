@@ -33,14 +33,12 @@ const auth = admin.auth();
 
 if (!productionMode) {
   firestore.settings({
-    // TODO
-    host: `${ipAddress}:7001`, // Switch to 127.0.0.1 for personal development, in prod or test switch to 172.31.29.127. 
-    // this at some point needs to be added to the github secrets so we don't have to worry about switching it every time
+    host: `${ipAddress}:7001`,
     projectId: 'gcurealestate-ae639',
     ssl: false,
   })
-  process.env.FIREBASE_AUTH_EMULATOR_HOST = `${ipAddress}:9099`; // Switch to 127.0.0.1 for personal development
-  process.env.FIRESTORE_EMULATOR_HOST = `${ipAddress}:7001`; // Switch to 127.0.0.1 for personal development
+  process.env.FIREBASE_AUTH_EMULATOR_HOST = `${ipAddress}:9099`;
+  process.env.FIRESTORE_EMULATOR_HOST = `${ipAddress}:7001`;
   console.log("Connected to Firestore and Auth emulators.");
 }
 
