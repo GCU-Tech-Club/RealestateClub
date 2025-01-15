@@ -3,10 +3,15 @@ import routeHandler from './routes/routeHandler'; // import the routes variable
 import admin from 'firebase-admin';
 import cors from 'cors';
 
+var os = require('os');
+var networkInterfaces = os.networkInterfaces();
+console.log(networkInterfaces);
+
 // var serviceAccount = require("../../firebase-sak.json");
 require('dotenv').config()
 const productionMode = process.env.PRODUCTION_MODE === 'true';
-const ipAddress = productionMode ? '172.31.29.127' : '127.0.0.1';
+                                  // Test server      Local server
+const ipAddress = productionMode ? '172.31.29.127' : '127.0.0.1'; // 172.24.250.123     127.0.0.1
 
 const app = express();
 const port = 5001;
