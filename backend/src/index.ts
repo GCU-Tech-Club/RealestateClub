@@ -15,7 +15,7 @@ const productionMode = process.env.PRODUCTION_MODE === 'true';
 //                                   Test server     Local server    External IP address for local server
 //const ipAddress = productionMode ? '172.31.29.127' : '127.0.0.1'; // 172.24.250.123
 
-const ipAddress = productionMode ? testIP : '127.0.0.1'; // 172.24.250.123
+const ipAddress = productionMode ? '172.31.29.127' : '127.0.0.1'; // 172.24.250.123
 
 const app = express();
 const port = 5001;
