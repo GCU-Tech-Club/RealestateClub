@@ -6,17 +6,28 @@ import cors from 'cors';
 var os = require('os');
 var networkInterfaces = os.networkInterfaces();
 
-//const testIP = String(networkInterfaces['en0'][1].address);
-//console.log(testIP);
-
 // var serviceAccount = require("../../firebase-sak.json");
 require('dotenv').config()
 const productionMode = process.env.PRODUCTION_MODE === 'true';
 
+function getIpAddress(internal: boolean = false): string | null {
+  const interfaces = os.networkInterfaces();
+  for (const interfaceName in interfaces) {
+    for (const info of interfaces[interfaceName]) {
+      if (info.internal === internal && info.family === 'IPv4') {
+        return info.address;
+      }
+    }
+  }
+  return null;
+}
+
 //const testServerIP = String(networkInterfaces['en0'][1].address) || '172.31.29.127';
-const testServerIP = String(networkInterfaces['lo0'][0].address)
-console.log(testServerIP);
-const localServerIP = String(networkInterfaces['lo0'][0].address); // External IP: 172.24.250.123
+//const testServerIP = String(networkInterfaces['eth0'][0].address);
+//const localServerIP = String(networkInterfaces['lo0'][0].address); // External IP: 172.24.250.123
+
+const testServerIP = getIpAddress(false);
+const localServerIP = getIpAddress(true); // External IP: 172.24.250.123
 
 const ipAddress = productionMode ? testServerIP : localServerIP;
 
