@@ -1,12 +1,16 @@
 import express, { Request, Response } from 'express';
 import routeHandler from './routes/routeHandler'; // import the routes variable
 import admin from 'firebase-admin';
-//var serviceAccount = require("../firebase-sak.json");
+import cors from 'cors';
+
+// var serviceAccount = require("../../firebase-sak.json");
 require('dotenv').config()
 const productionMode = process.env.PRODUCTION_MODE === 'true';
 
 const app = express();
 const port = 5001;
+
+app.use(cors());
 
 // Initialize Firebase Admin SDK
 if (productionMode) {
@@ -19,24 +23,23 @@ if (productionMode) {
   
   console.log('Using Live Firebase Data!');
 } else {
-  admin.initializeApp(
-    //{credential: admin.credential.cert(serviceAccount),} // Commented for testing purposes while auth isn't tested
-  );
+  admin.initializeApp();
   console.log("Using Firebase Emulator.");
 }
 
 const firestore = admin.firestore();
 const auth = admin.auth();
 
-
 if (!productionMode) {
   firestore.settings({
-    host: '172.31.29.127:7001',
+    // TODO
+    host: '172.31.29.127:7001', // Switch to 127.0.0.1 for personal development, in prod or test switch to 172.31.29.127. 
+    // this at some point needs to be added to the github secrets so we don't have to worry about switching it every time
     projectId: 'gcurealestate-ae639',
     ssl: false,
   })
-  process.env.FIREBASE_AUTH_EMULATOR_HOST = '172.31.29.127:9099';
-  process.env.FIRESTORE_EMULATOR_HOST = '172.31.29.127:7001';
+  process.env.FIREBASE_AUTH_EMULATOR_HOST = '172.31.29.127:9099'; // Switch to 127.0.0.1 for personal development
+  process.env.FIRESTORE_EMULATOR_HOST = '172.31.29.127:7001'; // Switch to 127.0.0.1 for personal development
   console.log("Connected to Firestore and Auth emulators.");
 }
 
