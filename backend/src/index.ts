@@ -6,8 +6,8 @@ import cors from 'cors';
 var os = require('os');
 var networkInterfaces = os.networkInterfaces();
 
-const testIP = networkInterfaces['en0'][1].address;
-console.log(testIP);
+// const testIP = networkInterfaces['en0'][1].address;
+// console.log(testIP);
 
 // var serviceAccount = require("../../firebase-sak.json");
 require('dotenv').config()
