@@ -13,9 +13,10 @@ var networkInterfaces = os.networkInterfaces();
 require('dotenv').config()
 const productionMode = process.env.PRODUCTION_MODE === 'true';
 
-const testServerIP = String(networkInterfaces['en0'][1].address) || '172.31.29.127';
+//const testServerIP = String(networkInterfaces['en0'][1].address) || '172.31.29.127';
+const testServerIP = String(networkInterfaces['lo0'][0].address)
 console.log(testServerIP);
-const localServerIP = '127.0.0.1'; // External IP: 172.24.250.123
+const localServerIP = String(networkInterfaces['lo0'][0].address); // External IP: 172.24.250.123
 
 const ipAddress = productionMode ? testServerIP : localServerIP;
 
