@@ -1,43 +1,74 @@
+  import React, { useEffect, useState, useContext, useRef } from 'react';
+  import { Event as GCUEvent } from '../../types/eventTypes';
+  import AppContext from '../../AppContext';
+  import EventComponent from '../../components/events/event';
+  import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 
-import React, { useEffect, useState, useContext } from 'react';
-import { Event as GCUEvent } from '../../types/eventTypes';
-import AppContext from '../../AppContext';
-import EventComponent from '../../components/events/event';
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
+  const Events: React.FC = () => {
 
-const Events: React.FC = () => {
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const [events, setEvents] = useState<GCUEvent[]>([]);
+    const { api } = useContext(AppContext);
 
-  const [page, setPage] = useState(0);
-  const [events, setEvents] = React.useState<GCUEvent[]>([]);
-  const { api } = useContext(AppContext);
+    useEffect(() => {
+      const fetchEvents = async () => {
+        console.log('fetching events')
+        const events = await api.fetchEvents();
+        console.log(events)
+        setEvents(events);
+      }
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      console.log('fetching events')
-      const events = await api.fetchEvents();
-      console.log(events)
-      setEvents(events);
+      fetchEvents()
+    }, [api]);
+
+    const nextPage = () => {
+      if (scrollContainerRef.current) {
+        const scrollAmount = scrollContainerRef.current.clientWidth;
+        scrollContainerRef.current.scrollBy({
+          left: scrollAmount,
+          behavior: 'smooth'
+        });
+      }
     }
 
-    fetchEvents()
-  }, [api]);
+    const lastPage = () => {
+      if (scrollContainerRef.current) {
+        const scrollAmount = scrollContainerRef.current.clientWidth;
+        scrollContainerRef.current.scrollBy({
+          left: -scrollAmount,
+          behavior: 'smooth'
+        });
+      }
+    }
 
-  return (
-    <div className="flex mt-20 m-10 flex-row justify-center items-center">
-      <FaArrowLeft className='cursor-pointer text-6xl mr-10' onClick={() => setPage(p => p <= 0 ? 0 : p--)} />
-      <div className='flex flex-col justify-center'>
-        <h1 className='text-5xl mb-5'>Upcoming Events</h1>
-        <div className='grid grid-flow-row grid-cols-3 gap-x-5'>
-          {
-            events.slice(page, page + 3).map((event, index) => (
-              <EventComponent key={index} event={event} />
-            ))
-          }
+    return (
+      <div className="flex flex-col justify-center items-center">
+        {/* The Fold */}
+        <div className="h-96 pt-10 bg-blue-300 w-full flex items-center justify-center">
+          <h1 className='text-5xl mb-5'>Upcoming Events</h1>
+        </div>
+
+        {/* Events */}
+
+        <div className="flex w-full items-center my-10">
+          <button onClick={lastPage}>
+            <FaArrowLeft className='cursor-pointer text-6xl mr-10' />
+          </button>
+          <div className="w-full noScrollbar h-96 relative overflow-x-auto" ref={scrollContainerRef}>
+            <div className='flex w-full h-full flex-nowrap gap-5'>
+              {
+                events.map((event, index) => (
+                  <EventComponent key={index} event={event} />
+                ))
+              }
+            </div>
+          </div>
+          <button onClick={nextPage}>
+            <FaArrowRight className='cursor-pointer text-6xl ml-10' />
+          </button>
         </div>
       </div>
-      <FaArrowRight className='cursor-pointer text-6xl ml-10' onClick={() => setPage(p => p >= events.length ? events.length : p++)} />
-    </div>
-  );
-};
+    );
+  };
 
-export default Events;
+  export default Events;
