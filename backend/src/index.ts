@@ -19,27 +19,13 @@ function getIpAddress(internal: boolean = false): string | null {
   }
   throw new Error(`No ${internal ? 'internal' : 'external'} IP address found`);
 }
-/*
-const AWS = require('aws-sdk');
 
-const metadata = new AWS.MetadataService();
-
-metadata.getMetadata('public-ipv4', (err, data) => {
-  if (err) {
-    console.log(err);
-  } else {
-    const ipAddress = data;
-    console.log(ipAddress);
-  }
-});
-*/
 let testServerIP: string | null;
 let localServerIP: string | null;
 let ipAddress: string | null;
 
 try {
-  //testServerIP = getIpAddress(false);
-  testServerIP = '172.31.29.127';
+  testServerIP = getIpAddress(false);
   localServerIP = getIpAddress(true);
   ipAddress = productionMode ? testServerIP : localServerIP;
 } catch (error) {
