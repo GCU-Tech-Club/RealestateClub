@@ -5,27 +5,27 @@ import { Event } from '../../../../types';
 const router = Router();
 
 router.get('/', async (req, res) => {
-    const page: number = parseInt(req.query.page as string) || 1;
-    const pageSize: number = 10;
+    const page = parseInt(req.query.page as string) || 1;
+    const pageSize = 10;
 
     try {
-        const eventsCollection: FirebaseFirestore.CollectionReference = firestore.collection("Events");
-        let query: FirebaseFirestore.Query = eventsCollection.orderBy("Time", "asc").limit(pageSize);
+        const eventsCollection = firestore.collection("Events");
+        let query = eventsCollection.orderBy("Time", "asc").limit(pageSize);
     
         if (page > 1) {
-          const previousPageQuery: FirebaseFirestore.Query = eventsCollection
+          const previousPageQuery = eventsCollection
             .orderBy("Time", "asc")
             .limit((page - 1) * pageSize);
     
-          const previousPageSnapshot: FirebaseFirestore.QuerySnapshot = await previousPageQuery.get();
+          const previousPageSnapshot = await previousPageQuery.get();
     
           if (!previousPageSnapshot.empty) {
-            const lastDoc: FirebaseFirestore.QueryDocumentSnapshot = previousPageSnapshot.docs[previousPageSnapshot.docs.length - 1];
+            const lastDoc = previousPageSnapshot.docs[previousPageSnapshot.docs.length - 1];
             query = eventsCollection.orderBy("Time", "asc").startAfter(lastDoc).limit(pageSize);
           }
         }
     
-        const snapshot: FirebaseFirestore.QuerySnapshot = await query.get();
+        const snapshot = await query.get();
         const events = snapshot.docs.map(doc => {
           const data = doc.data() as Event;
           return {
