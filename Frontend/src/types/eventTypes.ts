@@ -8,3 +8,10 @@ export interface Event {
   Registered: string[];
   Attended: string[];
 }
+
+export interface EventRest {
+  page: number;
+  pageSize: number;
+  totalEvents: number;
+  events: Event[];
+}
