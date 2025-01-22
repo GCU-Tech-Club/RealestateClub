@@ -1,6 +1,6 @@
 
-import React, { useEffect, useState } from 'react';
-import { Event as GCUEvent } from '../../types/event_types';
+import React, { useEffect, useState, useContext } from 'react';
+import { Event as GCUEvent } from '../../types/eventTypes';
 import AppContext from '../../AppContext';
 import EventComponent from '../../components/events/event';
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
@@ -9,10 +9,17 @@ const Events: React.FC = () => {
 
   const [page, setPage] = useState(0);
   const [events, setEvents] = React.useState<GCUEvent[]>([]);
-  const { api } = React.useContext(AppContext);
+  const { api } = useContext(AppContext);
 
   useEffect(() => {
-    api.fetchEvents().then(events => setEvents(events));
+    const fetchEvents = async () => {
+      console.log('fetching events')
+      const events = await api.fetchEvents();
+      console.log(events)
+      setEvents(events);
+    }
+
+    fetchEvents()
   }, [api]);
 
   return (
@@ -22,8 +29,8 @@ const Events: React.FC = () => {
         <h1 className='text-5xl mb-5'>Upcoming Events</h1>
         <div className='grid grid-flow-row grid-cols-3 gap-x-5'>
           {
-            events.slice(page, page + 3).map(event => (
-              <EventComponent event={event} />
+            events.slice(page, page + 3).map((event, index) => (
+              <EventComponent key={index} event={event} />
             ))
           }
         </div>

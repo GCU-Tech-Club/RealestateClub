@@ -1,19 +1,33 @@
 import { FaRegCalendarAlt } from "react-icons/fa";
-import { Event } from "../../types/event_types";
+import { Event } from "../../types/eventTypes";
 import { formatDate, formatTime } from "../../util/util";
+import { useEffect, useState } from "react";
 
 interface EventComponentProps {
   event: Event
 }
 
 export const EventComponent = ({ event }: EventComponentProps) => {
+
+  const [formattedDate, setFormattedDate] = useState('');
+  const [formattedTime, setFormattedTime] = useState('');
+
+  useEffect(() => {
+    try {
+      setFormattedDate(formatDate(event.Date));
+      setFormattedTime(formatTime(event.Date));
+    } catch (error) {
+      console.error('Error formatting date:', error);
+    }
+  }, [event.Date]);
+
   return (
     <div key={event.UID} className="w-96 text-black font-inter rounded-xl shadow-lg">
       <div className="relative">
         <img src={event.icon} className="w-full overflow-hidden rounded-t-xl blur-[1px]" />
         <div className="p-5 absolute bottom-0 left-0 = z-10 text-white rounded-br-xl">
-          <h1 className="font-bold text-3xl">{formatDate(event.Date)}</h1>
-          <span className="font-bold text-xl">{formatTime(event.Date)} • {event.Location}</span>
+          <h1 className="font-bold text-3xl">{formattedDate}</h1>
+          <span className="font-bold text-xl">{formattedTime} • {event.Location}</span>
         </div>
       </div>
       <div className="p-5">
