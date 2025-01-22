@@ -6,7 +6,7 @@ const router = Router();
 
 router.get('/', async (req, res) => {
     const page = parseInt(req.query.page as string) || 1;
-    const pageSize = 10;
+    const pageSize = 5;
     
     try {
         const usersCollection = firestore.collection("Users");
