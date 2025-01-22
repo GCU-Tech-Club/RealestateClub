@@ -82,7 +82,7 @@ app.get('/firebase-test', async (req: Request, res: Response) => {
     } catch (error) {
       res.status(500).json({
         message: 'Failed to connect to Firebase',
-        error: error,
+        error: error instanceof Error ? error.message : 'Unknown error',
       });
     }
 });
