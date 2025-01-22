@@ -5,30 +5,29 @@ import { User } from '../../../../types';
 const router = Router();
 
 router.get('/', async (req, res) => {
-    console.log("Getting all users");
     const page = parseInt(req.query.page as string) || 1;
-    const pageSize = 20;
+    const pageSize = 10;
     
     try {
         const usersCollection = firestore.collection("Users");
-        let query = usersCollection.orderBy("Time", "asc").limit(pageSize);
+        let query = usersCollection.orderBy("Name", "asc").limit(pageSize);
     
         if (page > 1) {
           const previousPageQuery = usersCollection
-            .orderBy("Time", "asc")
+            .orderBy("Name", "asc")
             .limit((page - 1) * pageSize);
     
           const previousPageSnapshot = await previousPageQuery.get();
     
           if (!previousPageSnapshot.empty) {
             const lastDoc = previousPageSnapshot.docs[previousPageSnapshot.docs.length - 1];
-            query = usersCollection.orderBy("Time", "asc").startAfter(lastDoc).limit(pageSize);
+            query = usersCollection.orderBy("Name", "asc").startAfter(lastDoc).limit(pageSize);
           }
         }
     
         const snapshot = await query.get();
-        const users = snapshot.docs.map(doc => {
-          const data = doc.data() as User;
+        const users = snapshot.docs.map((doc): User => {
+          const data = doc.data();
           return {
             UID: data.UID,
             Name: data.Name,

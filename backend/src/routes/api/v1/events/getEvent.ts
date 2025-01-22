@@ -18,9 +18,9 @@ router.get('/:id', async (req, res) => {
 
         const formattedEventData: Event = {
           UID: eventData.UID,
-          Event_Name: eventData.Name,
+          EventName: eventData.EventName,
           Location: eventData.Location,
-          Date: eventData.Time.toDate(),
+          Date: eventData.Date,
           Description: eventData.Description,
           Registered: eventData.Registered,
           Attended: eventData.Attended,

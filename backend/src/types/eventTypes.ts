@@ -3,7 +3,7 @@ export interface Event {
     icon?: string;
     Date: Date;
     Location: string
-    Event_Name: string;
+    EventName: string;
     Description: string;
     Registered: string[];
     Attended: string[];
