@@ -7,28 +7,26 @@ import cors from 'cors';
 require('dotenv').config()
 const productionMode = process.env.PRODUCTION_MODE === 'true';
 
-// var os = require('os');
-// function getIpAddress(internal: boolean = false): string | null {
-//   const networkInterfaces = os.networkInterfaces();
-//   for (const interfaceName in networkInterfaces) {
-//     for (const info of networkInterfaces[interfaceName]) {
-//       if (info.internal === internal && info.family === 'IPv4') {
-//         return info.address;
-//       }
-//     }
-//   }
-//   throw new Error(`No ${internal ? 'internal' : 'external'} IP address found`);
-// }
+var os = require('os');
+function getIpAddress(internal: boolean = false): string | null {
+  const networkInterfaces = os.networkInterfaces();
+  for (const interfaceName in networkInterfaces) {
+    for (const info of networkInterfaces[interfaceName]) {
+      if (info.internal === internal && info.family === 'IPv4') {
+        return info.address;
+      }
+    }
+  }
+  throw new Error(`No ${internal ? 'internal' : 'external'} IP address found`);
+}
 
 let testServerIP: string | null;
 let localServerIP: string | null;
 let ipAddress: string | null;
 
 try {
-  // testServerIP = getIpAddress(false);
-  // localServerIP = getIpAddress(true);
-  testServerIP = '172.31.29.127';
-  localServerIP = '127.0.0.1';
+  testServerIP = getIpAddress(false);
+  localServerIP = getIpAddress(true);
   ipAddress = productionMode ? testServerIP : localServerIP;
 } catch (error) {
   throw new Error(`Failed to get IP address: ${error}`);
