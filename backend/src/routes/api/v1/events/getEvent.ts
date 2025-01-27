@@ -7,7 +7,7 @@ const router = Router();
 router.get('/:id', async (req, res) => {
     try {
         const id: string = req.params.id
-        const eventDoc = await firestore.collection('Events').doc(id).get();
+        const eventDoc = await firestore.collection('events').doc(id).get();
 
         if (!eventDoc.exists) {
             res.status(404).json({message: 'Event data not found'});
@@ -17,13 +17,13 @@ router.get('/:id', async (req, res) => {
         const eventData = { ...eventDoc.data() };
 
         const formattedEventData: Event = {
-          UID: eventData.UID,
-          EventName: eventData.EventName,
-          Location: eventData.Location,
-          Date: eventData.Date,
-          Description: eventData.Description,
-          Registered: eventData.Registered,
-          Attended: eventData.Attended,
+          uid: eventData.uid,
+          eventName: eventData.eventName,
+          location: eventData.location,
+          date: eventData.date,
+          description: eventData.description,
+          registered: eventData.registered,
+          attended: eventData.attended,
         };
 
         res.status(200).json({

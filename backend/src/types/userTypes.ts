@@ -1,6 +1,6 @@
 export interface User {
-    UID: string;
-    Name: string;
-    Bio: string;
-    Major: string;
+    uid: string;
+    name: string;
+    major: string;
+    bio: string;
 };

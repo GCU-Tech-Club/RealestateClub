@@ -1,10 +1,10 @@
 export interface Event {
-    UID: string;
+    uid: string;
     icon?: string;
-    Date: Date;
-    Location: string
-    EventName: string;
-    Description: string;
-    Registered: string[];
-    Attended: string[];
+    date: Date;
+    location: string
+    eventName: string;
+    description: string;
+    registered: string[];
+    attended: string[];
   }

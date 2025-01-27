@@ -9,19 +9,19 @@ router.get('/', async (req, res) => {
     const pageSize = 10;
     
     try {
-        const usersCollection = firestore.collection("Users");
-        let query = usersCollection.orderBy("Name", "asc").limit(pageSize);
+        const usersCollection = firestore.collection('users');
+        let query = usersCollection.orderBy('name', 'asc').limit(pageSize);
     
         if (page > 1) {
           const previousPageQuery = usersCollection
-            .orderBy("Name", "asc")
+            .orderBy('name', 'asc')
             .limit((page - 1) * pageSize);
     
           const previousPageSnapshot = await previousPageQuery.get();
     
           if (!previousPageSnapshot.empty) {
             const lastDoc = previousPageSnapshot.docs[previousPageSnapshot.docs.length - 1];
-            query = usersCollection.orderBy("Name", "asc").startAfter(lastDoc).limit(pageSize);
+            query = usersCollection.orderBy('name', 'asc').startAfter(lastDoc).limit(pageSize);
           }
         }
     
@@ -29,10 +29,10 @@ router.get('/', async (req, res) => {
         const users = snapshot.docs.map((doc): User => {
           const data = doc.data();
           return {
-            UID: data.UID,
-            Name: data.Name,
-            Bio: data.Bio,
-            Major: data.Major,
+            uid: data.uid,
+            name: data.name,
+            major: data.major,
+            bio: data.bio
           };
         });
         

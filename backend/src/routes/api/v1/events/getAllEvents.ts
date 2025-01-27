@@ -9,19 +9,19 @@ router.get('/', async (req, res) => {
     const pageSize = 5;
 
     try {
-        const eventsCollection = firestore.collection("Events");
-        let query = eventsCollection.orderBy("Date", "asc").limit(pageSize);
+        const eventsCollection = firestore.collection('events');
+        let query = eventsCollection.orderBy('date', 'asc').limit(pageSize);
     
         if (page > 1) {
           const previousPageQuery = eventsCollection
-            .orderBy("Date", "asc")
+            .orderBy('date', 'asc')
             .limit((page - 1) * pageSize);
     
           const previousPageSnapshot = await previousPageQuery.get();
     
           if (!previousPageSnapshot.empty) {
             const lastDoc = previousPageSnapshot.docs[previousPageSnapshot.docs.length - 1];
-            query = eventsCollection.orderBy("Date", "asc").startAfter(lastDoc).limit(pageSize);
+            query = eventsCollection.orderBy('date', 'asc').startAfter(lastDoc).limit(pageSize);
           }
         }
     
@@ -29,13 +29,13 @@ router.get('/', async (req, res) => {
         const events = snapshot.docs.map((doc): Event => {
           const data = doc.data();
           return {
-            UID: data.UID,
-            EventName: data.EventName,
-            Location: data.Location,
-            Date: data.Date,
-            Description: data.Description,
-            Registered: data.Registered,
-            Attended: data.Attended,
+            uid: data.uid,
+            eventName: data.eventName,
+            location: data.location,
+            date: data.date,
+            description: data.description,
+            registered: data.registered,
+            attended: data.attended,
           };
         });
         
