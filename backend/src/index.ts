@@ -7,11 +7,8 @@ import cors from 'cors';
 require('dotenv').config()
 const productionMode = process.env.PRODUCTION_MODE === 'true';
 
-console.log('Server is running in ' + (productionMode ? 'production' : 'development') + ' mode');
-
 var os = require('os');
 function getIpAddress(internal: boolean = false): string | null {
-  console.log(`Getting ${internal ? 'internal' : 'external'} IP address...`);
   const networkInterfaces = os.networkInterfaces();
   for (const interfaceName in networkInterfaces) {
     for (const info of networkInterfaces[interfaceName]) {
@@ -30,22 +27,15 @@ let ipAddress: string | null;
 try {
   testServerIP = getIpAddress(false);
   localServerIP = getIpAddress(true);
-  console.log(`Local IP: ${localServerIP}`);
-  console.log(`Test Server IP: ${testServerIP}`);
   ipAddress = productionMode ? testServerIP : localServerIP;
-  console.log(`Server IP: ${ipAddress}`);
 } catch (error) {
   throw new Error(`Failed to get IP address: ${error}`);
 }
-
-console.log('Past IP address');
 
 const app = express();
 const port = 5001;
 
 app.use(cors());
-
-console.log('Past cors middleware');
 
 // Initialize Firebase Admin SDK
 if (productionMode) {
@@ -62,8 +52,6 @@ if (productionMode) {
   console.log("Using Firebase Emulator.");
 }
 
-console.log('Past Firebase Admin');
-
 const firestore = admin.firestore();
 const auth = admin.auth();
 
@@ -78,13 +66,10 @@ if (!productionMode) {
   console.log("Connected to Firestore and Auth emulators.");
 }
 
-console.log('Past Firestore settings');
-
 // Test route to check Firebase connection
 // TODO Get rid of this once we actually have some firebase functionality working
 // for right now this is just an endpoint you can hit to make sure the db is working properly
 app.get('/firebase-test', async (req: Request, res: Response) => {
-  console.log('Testing Firebase connection...');
     try {
       // Check Firebase Admin connection by listing Firestore collections
       const collections = await firestore.listCollections();
