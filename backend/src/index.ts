@@ -7,6 +7,14 @@ import cors from 'cors';
 require('dotenv').config()
 const productionMode = process.env.PRODUCTION_MODE === 'true';
 
+
+
+const app = express();
+const port = 5001;
+
+app.use(cors());
+
+
 var os = require('os');
 function getIpAddress(internal: boolean = false): string | null {
   const networkInterfaces = os.networkInterfaces();
@@ -25,17 +33,14 @@ let localServerIP: string | null;
 let ipAddress: string | null;
 
 try {
-  testServerIP = getIpAddress(false);
-  localServerIP = getIpAddress(true);
-  ipAddress = productionMode ? testServerIP : localServerIP;
+  //testServerIP = getIpAddress(false); // 172.31.29.127
+  //localServerIP = getIpAddress(true);
+  //ipAddress = productionMode ? testServerIP : localServerIP;
+  ipAddress = '172.31.29.127';
 } catch (error) {
   throw new Error(`Failed to get IP address: ${error}`);
 }
 
-const app = express();
-const port = 5001;
-
-app.use(cors());
 
 // Initialize Firebase Admin SDK
 if (productionMode) {
