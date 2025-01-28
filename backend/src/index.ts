@@ -29,10 +29,12 @@ let testServerIP: string | null;
 let localServerIP: string | null;
 let ipAddress: string | null;
 
+const dev_env = process.env.ENVIRONMENT;
+
 try {
   testServerIP = getIpAddress(false);
   localServerIP = getIpAddress(true);
-  ipAddress = !productionMode ? testServerIP : localServerIP;
+  ipAddress = dev_env ? testServerIP : localServerIP;
 } catch (error) {
   throw new Error(`Failed to get IP address: ${error}`);
 }
