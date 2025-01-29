@@ -9,6 +9,4 @@ services:
       - /app/node_modules
     ports:
       - 5001:5001
-    environment:
-      - dev=true
     command: npm run dev
