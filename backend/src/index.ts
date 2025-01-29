@@ -25,6 +25,44 @@ function getIpAddress(internal: boolean = false): string | null {
   throw new Error(`No ${internal ? 'internal' : 'external'} IP address found`);
 }
 
+
+
+import https from 'https';
+import { get } from 'http';
+
+function getPublicIP(): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const options = {
+      hostname: '169.254.169.254', // EC2 metadata service IP
+      path: '/latest/meta-data/public-ipv4',
+      method: 'GET',
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+
+      res.on('end', () => {
+        if (res.statusCode === 200) {
+          resolve(data); // public IP
+        } else {
+          reject(new Error('Unable to fetch public IP'));
+        }
+      });
+    });
+
+    req.on('error', (e) => {
+      reject(new Error(`Request failed: ${e.message}`));
+    });
+
+    req.end();
+  });
+}
+
+
 let testDevelopment: boolean;
 if (process.env.DEPLOYMENT_ENV === 'test') {
    testDevelopment = true;
@@ -37,17 +75,39 @@ console.log(`Test Development: ${testDevelopment}`);
 
 let testServerIP: string | null;
 let localServerIP: string | null;
-let ipAddress: string | null;
+let ipAddress: string | null | undefined;
 
-try {
-  testServerIP = getIpAddress(false); // 172.31.29.127
-  testServerIP = '172.31.29.127';
-  localServerIP = getIpAddress(true);
-  ipAddress = testDevelopment ? testServerIP : localServerIP;
-  console.log(`Server IP: ${ipAddress}`);
-} catch (error) {
-  throw new Error(`Failed to get IP address: ${error}`);
+async function getIpAddress2() {
+  try {
+    const testServerIP = await Promise.race([
+      getPublicIP(),
+      new Promise((resolve) => setTimeout(() => resolve('default-ip-address'), 5000)),
+    ]);
+    localServerIP = getIpAddress(true);
+    const ipAddress2 = testDevelopment ? testServerIP : localServerIP;
+    console.log(`Server IP: ${ipAddress2}`);
+    return ipAddress2;
+  } catch (error) {
+    console.error(error);
+  }
 }
+
+async function init() {
+  const ipAddress = await getIpAddress2();
+
+  // Initialize Firebase Admin SDK
+  if (productionMode) {
+    console.log(process.env.FIREBASE_SAK);
+    const serviceAccount = JSON.parse(process.env.FIREBASE_SAK as string);
+
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+    });
+  }
+}
+
+init();
+
 
 
 // Initialize Firebase Admin SDK
