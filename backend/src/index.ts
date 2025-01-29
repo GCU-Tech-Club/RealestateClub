@@ -52,7 +52,7 @@ try {
   // testServerIP = os.networkInterfaces().eth0[0].address;
   // ipAddress = testDevelopment ? testServerIP : localServerIP;
  
-  ipAddress = testDevelopment ? os.networkInterfaces().eth0[0].address : os.networkInterfaces().lo0[0].address;
+  ipAddress = testDevelopment ? os.networkInterfaces().eth0 : os.networkInterfaces().lo0[0].address;
   console.log(ipAddress);
 
 } catch (error) {
