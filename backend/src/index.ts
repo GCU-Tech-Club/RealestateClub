@@ -13,16 +13,21 @@ const port = 5001;
 app.use(cors());
 
 var os = require('os');
-function getIpAddress(internal: boolean = false): string | null {
+function getIpAddress(internal: boolean = false): string {
   const networkInterfaces = os.networkInterfaces();
-  for (const interfaceName in networkInterfaces) {
-    for (const info of networkInterfaces[interfaceName]) {
-      if (info.internal === internal && info.family === 'IPv4') {
-        return info.address;
-      }
-    }
-  }
-  throw new Error(`No ${internal ? 'internal' : 'external'} IP address found`);
+
+  // const ipAddresses: string[] = [];
+
+  // for (const interfaceName in networkInterfaces) {
+  //   for (const info of networkInterfaces[interfaceName]) {
+  //     if (info.internal === internal && info.family === 'IPv4') {
+  //       //return info.address;
+  //       ipAddresses.push(info.address);
+  //     }
+  //   }
+  // }
+  return networkInterfaces.lo0[0].address;
+  //throw new Error(`No ${internal ? 'internal' : 'external'} IP address found`);
 }
 
 let testDevelopment: boolean;
@@ -40,9 +45,16 @@ let localServerIP: string | null;
 let ipAddress: string | null;
 
 try {
-  testServerIP = getIpAddress(true); // old = false     172.31.29.127 
-  localServerIP = getIpAddress(true);
-  ipAddress = productionMode ? testServerIP : localServerIP;
+  //console.log(getIpAddress(true));
+  //testServerIP = getIpAddress(true); // old = false     172.31.29.127 
+
+  // localServerIP = os.networkInterfaces().lo0[0].address;
+  // testServerIP = os.networkInterfaces().eth0[0].address;
+  // ipAddress = testDevelopment ? testServerIP : localServerIP;
+ 
+  ipAddress = testDevelopment ? os.networkInterfaces().eth0[0].address : os.networkInterfaces().lo0[0].address;
+  console.log(ipAddress);
+
 } catch (error) {
   throw new Error(`Failed to get IP address: ${error}`);
 }
