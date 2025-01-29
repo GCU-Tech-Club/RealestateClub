@@ -41,6 +41,7 @@ let ipAddress: string | null;
 
 try {
   testServerIP = getIpAddress(false); // 172.31.29.127
+  testServerIP = '172.31.29.127';
   localServerIP = getIpAddress(true);
   ipAddress = testDevelopment ? testServerIP : localServerIP;
   console.log(`Server IP: ${ipAddress}`);
