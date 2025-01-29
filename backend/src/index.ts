@@ -12,25 +12,6 @@ const port = 5001;
 
 app.use(cors());
 
-let testDevelopment: boolean;
-if (process.env.DEPLOYMENT_ENV === 'test') {
-   testDevelopment = true;
-} else {
-  testDevelopment = false;
-}
-
-console.log(`Deployment Environment: ${process.env.DEPLOYMENT_ENV}`);
-console.log(`Running on Test Server: ${testDevelopment}`);
-
-let ipAddress: string | null;
-
-try {
-  ipAddress = testDevelopment ? '172.31.29.127': '127.0.0.1';
-  console.log("Trying to connect firebase to IP address: " + ipAddress);
-} catch (error) {
-  throw new Error(`Failed to get IP address: ${error}`);
-}
-
 // Initialize Firebase Admin SDK
 if (productionMode) {
   console.log(process.env.FIREBASE_SAK);
@@ -49,7 +30,24 @@ if (productionMode) {
 const firestore = admin.firestore();
 const auth = admin.auth();
 
+// Set up Firebase Emulator
 if (!productionMode) {
+  
+  let testDevelopment: boolean;
+  if (process.env.DEPLOYMENT_ENV === 'test') {
+    testDevelopment = true;
+  } else {
+    testDevelopment = false;
+  }
+
+  let ipAddress: string;
+  try {
+    ipAddress = testDevelopment ? '172.31.29.127': '127.0.0.1';
+    console.log("Firebase Emulator has successfully connected to " + ipAddress);
+  } catch (error) {
+    throw new Error(`Failed to get IP address: ${error}`);
+  }
+
   firestore.settings({
     host: `${ipAddress}:7001`,
     projectId: 'gcurealestate-ae639',
