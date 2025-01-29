@@ -12,24 +12,6 @@ const port = 5001;
 
 app.use(cors());
 
-var os = require('os');
-function getIpAddress(internal: boolean = false): string {
-  const networkInterfaces = os.networkInterfaces();
-
-  // const ipAddresses: string[] = [];
-
-  // for (const interfaceName in networkInterfaces) {
-  //   for (const info of networkInterfaces[interfaceName]) {
-  //     if (info.internal === internal && info.family === 'IPv4') {
-  //       //return info.address;
-  //       ipAddresses.push(info.address);
-  //     }
-  //   }
-  // }
-  return networkInterfaces.lo0[0].address;
-  //throw new Error(`No ${internal ? 'internal' : 'external'} IP address found`);
-}
-
 let testDevelopment: boolean;
 if (process.env.DEPLOYMENT_ENV === 'test') {
    testDevelopment = true;
@@ -38,23 +20,13 @@ if (process.env.DEPLOYMENT_ENV === 'test') {
 }
 
 console.log(`Deployment Environment: ${process.env.DEPLOYMENT_ENV}`);
-console.log(`Test Development: ${testDevelopment}`);
+console.log(`Running on Test Server: ${testDevelopment}`);
 
-let testServerIP: string | null;
-let localServerIP: string | null;
 let ipAddress: string | null;
 
 try {
-  //console.log(getIpAddress(true));
-  //testServerIP = getIpAddress(true); // old = false     172.31.29.127 
-
-  // localServerIP = os.networkInterfaces().lo0[0].address;
-  // testServerIP = os.networkInterfaces().eth0[0].address;
-  // ipAddress = testDevelopment ? testServerIP : localServerIP;
- 
-  ipAddress = testDevelopment ? os.networkInterfaces().eth0 : os.networkInterfaces().lo0[0].address;
-  console.log(ipAddress);
-
+  ipAddress = testDevelopment ? '172.31.29.127': '127.0.0.1';
+  console.log("Trying to connect firebase to IP address: " + ipAddress);
 } catch (error) {
   throw new Error(`Failed to get IP address: ${error}`);
 }
