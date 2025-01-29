@@ -29,7 +29,7 @@ let testServerIP: string | null;
 let localServerIP: string | null;
 let ipAddress: string | null;
 
-const localDev = true;
+const localDev = false;
 
 try {
   testServerIP = getIpAddress(false);
