@@ -25,17 +25,24 @@ function getIpAddress(internal: boolean = false): string | null {
   throw new Error(`No ${internal ? 'internal' : 'external'} IP address found`);
 }
 
+let testDevelopment: boolean;
+if (process.env.DEPLOYMENT_ENV === 'test') {
+   testDevelopment = true;
+} else {
+  testDevelopment = false;
+}
+
+console.log(`Deployment Environment: ${process.env.DEPLOYMENT_ENV}`);
+console.log(`Test Development: ${testDevelopment}`);
+
 let testServerIP: string | null;
 let localServerIP: string | null;
 let ipAddress: string | null;
 
-const localDev = false;
-
 try {
   testServerIP = getIpAddress(false); // 172.31.29.127
   localServerIP = getIpAddress(true);
-  ipAddress = !localDev ? testServerIP : localServerIP;
-  ipAddress = '172.31.29.127'
+  ipAddress = testDevelopment ? testServerIP : localServerIP;
   console.log(`Server IP: ${ipAddress}`);
 } catch (error) {
   throw new Error(`Failed to get IP address: ${error}`);
