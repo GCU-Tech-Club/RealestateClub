@@ -19,7 +19,7 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const userDoc: FirebaseFirestore.DocumentSnapshot = await firestore.collection('Users').doc(uid).get();
+    const userDoc = await firestore.collection('users').doc(uid).get();
 
     if (!userDoc.exists) {
       res.status(404).json({ message: 'User data not found' });
