@@ -1,5 +1,5 @@
 import EventComponent from './event'
-import { Event } from '../../types/event_types'
+import { Event } from '../../types/eventTypes'
 
 interface EventCarouselComponentProps {
     events: Event[]
@@ -52,4 +52,4 @@ const EventCarouselComponent: React.FC<EventCarouselComponentProps> = ({ events 
     )
 }
 
-export default EventCarouselComponent
+export default EventCarouselComponent;

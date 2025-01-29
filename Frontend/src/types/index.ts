@@ -1,2 +1,2 @@
-export * from './event_types'
+export * from './eventTypes'
 export * from './user_types'
