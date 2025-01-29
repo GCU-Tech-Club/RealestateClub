@@ -32,9 +32,10 @@ let ipAddress: string | null;
 const localDev = false;
 
 try {
-  testServerIP = getIpAddress(false);
+  testServerIP = getIpAddress(false); // 172.31.29.127
   localServerIP = getIpAddress(true);
   ipAddress = !localDev ? testServerIP : localServerIP;
+  ipAddress = '172.31.29.127'
   console.log(`Server IP: ${ipAddress}`);
 } catch (error) {
   throw new Error(`Failed to get IP address: ${error}`);
