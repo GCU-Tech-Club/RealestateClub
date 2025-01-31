@@ -12,6 +12,9 @@ when your branches' changes get merged to main the prod.yml
 workflow will run. When the workflow finishes your changes will reflect on
 http://ec2-54-215-43-213.us-west-1.compute.amazonaws.com
 
+# Postman Documentation
+View the documentation for the api routes [here](https://documenter.getpostman.com/view/38599522/2sAYX2NjNr)
+
 
 # FIREBASE
 to install the CLI tool use the following command (might require sudo if it fails)

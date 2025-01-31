@@ -39,7 +39,11 @@ router.get('/', async (req, res) => {
           };
         });
         
-        res.status(200).json({ page, pageSize, totalEvents: events.length, events: events })
+        if (events.length === 0) {
+          res.status(404).json({ message: 'No events found for this page query' });
+        } else {
+          res.status(200).json({ page, pageSize, totalEvents: events.length, events: events })
+        }
         
     } catch (error) {
         res.status(500).json({ message: "Error fetching events", error: error instanceof Error ? error.message : error })
