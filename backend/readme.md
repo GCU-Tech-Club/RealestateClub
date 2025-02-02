@@ -24,13 +24,23 @@ now to run the firebase emulator so you can work with auth and firestore locally
 `firebase emulators:start --import firebaseTestData`
 
 
-## Authentication Emulator
-usernames are first_last_{number} (ex. joe_smith_32)\
-emails are email{number}@example.com (ex. email32@example.com)\
+# Authentication Emulator
+
+### For Users
+usernames are first_last_{number} (ex. joe_smith_32) \
+emails are email{number}@example.com (ex. email32@example.com) \
 passwords are password{number} (ex. password32)
 
-*numbers range from 1-51* \
-*each users uid has a matching auth uid*
+*there are 51 users (number ranges from 1-51)* \
+*each auth uid has a matching uid in firestore*
+
+### For Admins - {"role": "admin"}
+usernames are admin_{number} (ex. admin_1) \
+emails are admin{number}@example.com (ex. admin1@example.com) \
+passwords are admin_password{number} (ex. admin_password1)
+
+*there are 3 admins (number ranges from 1-3)* \
+*each auth uid has a matching uid in firestore*
 
 
 # DOCKER INSTRUCTIONS (will not work if you do not have firebase-sak key)
