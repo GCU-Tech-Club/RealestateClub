@@ -1,16 +1,16 @@
-import { Router } from "express";
-import { firestore } from "../../../..";
-import { Event } from "../../../../types";
+import { Router } from 'express';
+import { firestore } from '../../../..';
+import { Event } from '../../../../types';
 
 const router = Router();
 
-router.get("/:id", async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const id: string = req.params.id;
-    const eventDoc = await firestore.collection("Events").doc(id).get();
+    const eventDoc = await firestore.collection('Events').doc(id).get();
 
     if (!eventDoc.exists) {
-      res.status(404).json({ message: "Event data not found" });
+      res.status(404).json({ message: 'Event data not found' });
       return;
     }
 
@@ -21,7 +21,7 @@ router.get("/:id", async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      message: "Error fetching event",
+      message: 'Error fetching event',
       error: error instanceof Error ? error.message : error,
     });
   }
