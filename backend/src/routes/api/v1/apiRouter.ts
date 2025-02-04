@@ -1,19 +1,23 @@
 import { Router } from 'express';
-import userRouter from './user/userRouter';
 import authMiddleware from './middleware/authMiddleware';
-import eventRouter from './events/eventsRouter';
+import userRouter from './user/userRouter';
 import usersRouter from './users/usersRouter';
+import eventRouter from './event/eventRouter';
+import eventsRouter from './events/eventsRouter';
+
 
 const router = Router();
 
 // User Routes with authentication middleware
 router.use('/user', authMiddleware, userRouter);
 
-// Users Route with authentication middleware
+// Users Routes with authentication middleware
 router.use('/users', authMiddleware, usersRouter);
 
 // Event Routes
-router.use('/events', eventRouter)
+router.use('/event', eventRouter);
 
+// Events Routes
+router.use('/events', eventsRouter);
 
 export default router;
