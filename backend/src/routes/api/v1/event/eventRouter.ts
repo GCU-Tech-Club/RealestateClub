@@ -16,9 +16,9 @@ router.get('/', (req, res) => {
   });
 });
 
-router.use('/', authMiddleware, eventCreate);
 router.use('/', eventDelete);
 router.use('/', eventUpdate);
 router.use('/', getEvent);
+router.use('/', authMiddleware, eventCreate); // Keep this at the end so that the middleware is only applied here
 
 export default router;
