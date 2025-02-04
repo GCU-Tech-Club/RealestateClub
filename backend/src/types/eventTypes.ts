@@ -7,6 +7,7 @@ export interface Event {
     description: string;
     registered: string[];
     attended: string[];
+    createdBy: string;
     secret?: string;
 }
 

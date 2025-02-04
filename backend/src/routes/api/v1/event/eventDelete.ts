@@ -5,9 +5,7 @@ import { messaging } from 'firebase-admin';
 
 const router = Router();
 
-router.delete(
-  '/:id',
-  async (req: Request<any, any, Event>, res: Response): Promise<void> => {
+router.delete('/:id', async (req: Request<any, any, Event>, res: Response): Promise<void> => {
     try {
       const id: string = req.params.id;
       const docRef = await firestore.collection('events').doc(id).get();

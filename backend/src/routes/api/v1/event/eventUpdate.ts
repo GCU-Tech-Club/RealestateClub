@@ -4,9 +4,7 @@ import { Event } from '../../../../types';
 
 const router = Router();
 
-router.put(
-  '/:id',
-  async (req: Request<any, any, Event>, res: Response): Promise<void> => {
+router.put('/:id', async (req: Request<any, any, Event>, res: Response): Promise<void> => {
     const id: string = req.params.id;
 
     try {
@@ -20,7 +18,7 @@ router.put(
         return;
       }
 
-      await firestore.collection('Events').doc(id).set(req.body);
+      await firestore.collection('events').doc(id).set(req.body);
 
       res.status(200).json({
         message: 'Event updated successfully',

@@ -36,6 +36,7 @@ router.get('/', async (req, res) => {
             description: data.description,
             registered: data.registered,
             attended: data.attended,
+            createdBy: data.createdBy
           };
         });
         

@@ -7,11 +7,10 @@ const { Timestamp } = require('firebase-admin').firestore;
 const router = Router();
 router.post('/', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { location, eventName, description } = req.body;
+    const { location, eventName, description, date } = req.body;
     const createdBy = req.body.uid;
-    const eventDate = req.body.Date;
 
-    if (!createdBy || !location || !eventName || !description || !eventDate) {
+    if (!createdBy || !location || !eventName || !description || !date) {
       res.status(400).json({
         message:
           'Missing required fields: UID, Date, Location, EventName, Description',
@@ -26,10 +25,11 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
       uid: eventDocRef.id,
       eventName: eventName,
       location: location,
-      date: Timestamp.fromDate(new Date(eventDate)),
+      date: Timestamp.fromDate(new Date(date)),
       description: description,
       registered: [],
       attended: [],
+      createdBy: createdBy
     };
 
     // Set event data to the new document

@@ -24,6 +24,7 @@ router.get('/:id', async (req, res) => {
           description: eventData.description,
           registered: eventData.registered,
           attended: eventData.attended,
+          createdBy: eventData.createdBy
         };
 
         res.status(200).json({
