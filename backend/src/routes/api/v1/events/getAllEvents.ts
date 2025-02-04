@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
 
     try {
         const eventsCollection: FirebaseFirestore.CollectionReference = firestore.collection("Events");
-        let query: FirebaseFirestore.Query = eventsCollection.orderBy("Time", "asc").limit(pageSize);
+        let query: FirebaseFirestore.Query = eventsCollection.orderBy("Date", "asc").limit(pageSize);
     
         if (page > 1) {
           const previousPageQuery: FirebaseFirestore.Query = eventsCollection
