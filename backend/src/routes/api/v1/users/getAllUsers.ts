@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { firestore } from '../../../..';
 import { User } from '../../../../types';
-import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
 
 const router = Router();
 
@@ -10,12 +9,7 @@ router.get('/', async (req, res) => {
     const pageSize = 10;
     
     try {
-        let uid: string;
-        if (process.env.PRODUCTION_MODE === 'true') {
-          uid = (req.body as DecodedIdToken).uid;
-        } else {
-          uid = req.body.uid;
-        }
+        const uid = req.body.uid;
 
         if (!uid) {
           res.status(400).json({ message: 'UID is required'});
