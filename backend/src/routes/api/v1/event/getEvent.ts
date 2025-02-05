@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { firestore } from '../../../..';
-import { Event } from '../../../../types';
+import { PublicEvent } from '../../../../types/eventTypes';
 
 const router = Router();
 
@@ -16,7 +16,7 @@ router.get('/:id', async (req, res) => {
 
         const eventData = { ...eventDoc.data() };
 
-        const formattedEventData: Event = {
+        const formattedEventData: PublicEvent = {
           uid: eventData.uid,
           eventName: eventData.eventName,
           location: eventData.location,
@@ -24,6 +24,7 @@ router.get('/:id', async (req, res) => {
           description: eventData.description,
           registered: eventData.registered,
           attended: eventData.attended,
+          createdBy: eventData.createdBy,
         };
 
         res.status(200).json({

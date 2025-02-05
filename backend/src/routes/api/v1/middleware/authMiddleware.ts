@@ -20,9 +20,7 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
             }
         }
         else {
-            req.body = {
-                uid: idToken
-            };
+            req.body.uid = idToken;
         }
         next();
 
@@ -31,6 +29,5 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
         return;
     }
 }
-
 
 export default authMiddleware;

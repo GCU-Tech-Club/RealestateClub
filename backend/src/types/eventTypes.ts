@@ -7,6 +7,8 @@ export interface Event {
     description: string;
     registered: string[];
     attended: string[];
-    secret?: string;
+    createdBy: string;
+    secret: string;
 }
 
+export type PublicEvent = Omit<Event, 'secret'>;
