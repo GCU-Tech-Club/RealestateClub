@@ -8,6 +8,6 @@ export interface Event {
     registered: string[];
     attended: string[];
     createdBy: string;
-    secret?: string;
+    secret: string;
 }
 

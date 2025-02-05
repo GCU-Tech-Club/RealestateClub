@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { firestore } from '../../../..';
 import { Event } from '../../../../types/eventTypes';
+import { v4 as uuidv4 } from 'uuid';
 
 const { Timestamp } = require('firebase-admin').firestore;
 
@@ -29,7 +30,8 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
       description: description,
       registered: [],
       attended: [],
-      createdBy: createdBy
+      createdBy: createdBy,
+      secret: uuidv4(),
     };
 
     // Set event data to the new document
