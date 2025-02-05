@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { firestore } from '../../../..';
-import { Event } from '../../../../types';
+import { PublicEvent } from '../../../../types/eventTypes';
 
 const router = Router();
 
@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
         }
     
         const snapshot = await query.get();
-        const events = snapshot.docs.map((doc): Event => {
+        const events = snapshot.docs.map((doc): PublicEvent => {
           const data = doc.data();
           return {
             uid: data.uid,
@@ -36,10 +36,15 @@ router.get('/', async (req, res) => {
             description: data.description,
             registered: data.registered,
             attended: data.attended,
+            createdBy: data.createdBy
           };
         });
         
-        res.status(200).json({ page, pageSize, totalEvents: events.length, events: events })
+        if (events.length === 0) {
+          res.status(404).json({ message: 'No events found for this page query' });
+        } else {
+          res.status(200).json({ page, pageSize, totalEvents: events.length, events: events })
+        }
         
     } catch (error) {
         res.status(500).json({ message: "Error fetching events", error: error instanceof Error ? error.message : error })
