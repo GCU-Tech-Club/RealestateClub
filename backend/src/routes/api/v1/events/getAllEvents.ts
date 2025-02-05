@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { firestore } from '../../../..';
-import { Event } from '../../../../types';
+import { PublicEvent } from '../../../../types/eventTypes';
 
 const router = Router();
 
@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
         }
     
         const snapshot = await query.get();
-        const events = snapshot.docs.map((doc): Event => {
+        const events = snapshot.docs.map((doc): PublicEvent => {
           const data = doc.data();
           return {
             uid: data.uid,
@@ -36,8 +36,7 @@ router.get('/', async (req, res) => {
             description: data.description,
             registered: data.registered,
             attended: data.attended,
-            createdBy: data.createdBy,
-            secret: data.secret
+            createdBy: data.createdBy
           };
         });
         

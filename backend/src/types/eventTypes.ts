@@ -11,3 +11,4 @@ export interface Event {
     secret: string;
 }
 
+export type PublicEvent = Omit<Event, 'secret'>;
