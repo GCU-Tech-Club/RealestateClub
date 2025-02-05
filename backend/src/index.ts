@@ -7,31 +7,6 @@ import cors from 'cors';
 require('dotenv').config()
 const productionMode = process.env.PRODUCTION_MODE === 'true';
 
-var os = require('os');
-function getIpAddress(internal: boolean = false): string | null {
-  const networkInterfaces = os.networkInterfaces();
-  for (const interfaceName in networkInterfaces) {
-    for (const info of networkInterfaces[interfaceName]) {
-      if (info.internal === internal && info.family === 'IPv4') {
-        return info.address;
-      }
-    }
-  }
-  throw new Error(`No ${internal ? 'internal' : 'external'} IP address found`);
-}
-
-let testServerIP: string | null;
-let localServerIP: string | null;
-let ipAddress: string | null;
-
-try {
-  testServerIP = getIpAddress(false);
-  localServerIP = getIpAddress(true);
-  ipAddress = productionMode ? testServerIP : localServerIP;
-} catch (error) {
-  throw new Error(`Failed to get IP address: ${error}`);
-}
-
 const app = express();
 const port = 5001;
 
@@ -55,7 +30,24 @@ if (productionMode) {
 const firestore = admin.firestore();
 const auth = admin.auth();
 
+// Set up Firebase Emulator
 if (!productionMode) {
+  
+  let testDevelopment: boolean;
+  if (process.env.DEPLOYMENT_ENV === 'test') {
+    testDevelopment = true;
+  } else {
+    testDevelopment = false;
+  }
+
+  let ipAddress: string;
+  try {
+    ipAddress = testDevelopment ? '172.31.29.127': '127.0.0.1';
+    console.log("Firebase Emulator has successfully connected to " + ipAddress);
+  } catch (error) {
+    throw new Error(`Failed to get IP address: ${error}`);
+  }
+
   firestore.settings({
     host: `${ipAddress}:7001`,
     projectId: 'gcurealestate-ae639',
@@ -82,7 +74,7 @@ app.get('/firebase-test', async (req: Request, res: Response) => {
     } catch (error) {
       res.status(500).json({
         message: 'Failed to connect to Firebase',
-        error: error,
+        error: error instanceof Error ? error.message : 'Unknown error',
       });
     }
 });

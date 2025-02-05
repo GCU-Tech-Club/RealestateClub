@@ -1,22 +1,13 @@
 import { Router } from 'express'
 import { firestore } from '../../../..';
+import { Event } from '../../../../types';
 
 const router = Router();
-
-interface EventDocument {
-    UID: string;
-    Name: string;
-    Location: string;
-    Time: Date;
-    Description: string;
-    Registered: string[];
-    Attended: string[];
-}
 
 router.get('/:id', async (req, res) => {
     try {
         const id: string = req.params.id
-        const eventDoc: FirebaseFirestore.DocumentSnapshot = await firestore.collection('Events').doc(id).get();
+        const eventDoc = await firestore.collection('events').doc(id).get();
 
         if (!eventDoc.exists) {
             res.status(404).json({message: 'Event data not found'});
@@ -25,14 +16,14 @@ router.get('/:id', async (req, res) => {
 
         const eventData = { ...eventDoc.data() };
 
-        const formattedEventData: EventDocument = {
-          UID: eventData.UID,
-          Name: eventData.Name,
-          Location: eventData.Location,
-          Time: eventData.Time.toDate(),
-          Description: eventData.Description,
-          Registered: eventData.Registered,
-          Attended: eventData.Attended,
+        const formattedEventData: Event = {
+          uid: eventData.uid,
+          eventName: eventData.eventName,
+          location: eventData.location,
+          date: eventData.date,
+          description: eventData.description,
+          registered: eventData.registered,
+          attended: eventData.attended,
         };
 
         res.status(200).json({
