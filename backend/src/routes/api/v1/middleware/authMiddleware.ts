@@ -9,11 +9,12 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
             return;
         }
         const idToken = authToken.split('Bearer ')[1];
-        
+        req.body = req.body || {};
+
         if (process.env.PRODUCTION_MODE === 'true') {
             const decodedToken = await admin.auth().verifyIdToken(idToken);
             if ('uid' in decodedToken && 'name' in decodedToken && 'bio' in decodedToken && 'major' in decodedToken) {
-                req.body = decodedToken;
+                Object.assign(req.body, decodedToken);
             } else {
                 res.status(401).send({"error": "Invalid user data types"});
                 return;
