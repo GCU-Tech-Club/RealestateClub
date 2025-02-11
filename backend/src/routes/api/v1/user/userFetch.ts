@@ -26,10 +26,17 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const userData = userDoc.data() as User;
+    const userData = { ...userDoc.data() };
+
+    const formattedUserData: User = {
+      uid: userData.uid,
+      name: userData.name,
+      major: userData.major,
+      bio: userData.bio
+    };
     
     res.status(200).json({
-      userData: userData,
+      userData: formattedUserData
     });
   } catch (error) {
     res.status(500).json({ message: "Error fetching user", error: error instanceof Error ? error.message : error })

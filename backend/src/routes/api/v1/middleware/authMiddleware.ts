@@ -10,7 +10,7 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
         }
         const idToken = authToken.split('Bearer ')[1];
         req.body = req.body || {};
-
+        
         if (process.env.PRODUCTION_MODE === 'true') {
             const decodedToken = await admin.auth().verifyIdToken(idToken);
             if ('uid' in decodedToken && 'name' in decodedToken && 'bio' in decodedToken && 'major' in decodedToken) {
