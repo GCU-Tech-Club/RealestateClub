@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { firestore } from '../../../..';
 import { FieldValue } from 'firebase-admin/firestore';
+import { messaging } from 'firebase-admin';
 
 const router = Router();
 
@@ -15,17 +16,22 @@ router.post('/:eventId', async (req: Request, res: Response): Promise<void> => {
   }
 
   try {
-    const eventDoc = await firestore.collection('Events').doc(eventId).get();
+    const eventDoc = await firestore.collection('events').doc(eventId).get();
 
     if (!eventDoc.exists) {
-      res.status(404).json({ message: 'Invalid secret code' });
+      res.status(401).json({ message: 'Event does not exist' });
       return;
     }
 
+    const eventData = { ...eventDoc.data() };
+    if (secret !== eventData.secret) {
+      res.status(404).json({ message: 'Invalid secret' });
+    }
+
     await firestore
-      .collection('Events')
+      .collection('events')
       .doc(eventId)
-      .update({ attendees: FieldValue.arrayUnion(UserUID) });
+      .update({ attended: FieldValue.arrayUnion(UserUID) });
 
     res.status(201).json({
       message: 'User successfully marked as attending the event',
