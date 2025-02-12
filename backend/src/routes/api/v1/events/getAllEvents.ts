@@ -1,45 +1,50 @@
 import { Router } from 'express';
 import { firestore } from '../../../..';
-import { Event } from '../../../../types';
+import { PublicEvent } from '../../../../types/eventTypes';
 
 const router = Router();
 
 router.get('/', async (req, res) => {
-    const page: number = parseInt(req.query.page as string) || 1;
-    const pageSize: number = 10;
+    const page = parseInt(req.query.page as string) || 1;
+    const pageSize = 5;
 
     try {
-        const eventsCollection: FirebaseFirestore.CollectionReference = firestore.collection("Events");
-        let query: FirebaseFirestore.Query = eventsCollection.orderBy("Time", "asc").limit(pageSize);
+        const eventsCollection = firestore.collection('events');
+        let query = eventsCollection.orderBy('date', 'asc').limit(pageSize);
     
         if (page > 1) {
-          const previousPageQuery: FirebaseFirestore.Query = eventsCollection
-            .orderBy("Time", "asc")
+          const previousPageQuery = eventsCollection
+            .orderBy('date', 'asc')
             .limit((page - 1) * pageSize);
     
-          const previousPageSnapshot: FirebaseFirestore.QuerySnapshot = await previousPageQuery.get();
+          const previousPageSnapshot = await previousPageQuery.get();
     
           if (!previousPageSnapshot.empty) {
-            const lastDoc: FirebaseFirestore.QueryDocumentSnapshot = previousPageSnapshot.docs[previousPageSnapshot.docs.length - 1];
-            query = eventsCollection.orderBy("Time", "asc").startAfter(lastDoc).limit(pageSize);
+            const lastDoc = previousPageSnapshot.docs[previousPageSnapshot.docs.length - 1];
+            query = eventsCollection.orderBy('date', 'asc').startAfter(lastDoc).limit(pageSize);
           }
         }
     
-        const snapshot: FirebaseFirestore.QuerySnapshot = await query.get();
-        const events = snapshot.docs.map(doc => {
-          const data = doc.data() as Event;
+        const snapshot = await query.get();
+        const events = snapshot.docs.map((doc): PublicEvent => {
+          const data = doc.data();
           return {
-            UID: data.UID,
-            Name: data.EventName,
-            Location: data.Location,
-            Time: data.Date,
-            Description: data.Description,
-            Registered: data.Registered,
-            Attended: data.Attended,
+            uid: data.uid,
+            eventName: data.eventName,
+            location: data.location,
+            date: data.date,
+            description: data.description,
+            registered: data.registered,
+            attended: data.attended,
+            createdBy: data.createdBy
           };
         });
         
-        res.status(200).json({ page, pageSize, totalEvents: events.length, events: events })
+        if (events.length === 0) {
+          res.status(404).json({ message: 'No events found for this page query' });
+        } else {
+          res.status(200).json({ page, pageSize, totalEvents: events.length, events: events })
+        }
         
     } catch (error) {
         res.status(500).json({ message: "Error fetching events", error: error instanceof Error ? error.message : error })

@@ -12,7 +12,7 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
         
         if (process.env.PRODUCTION_MODE === 'true') {
             const decodedToken = await admin.auth().verifyIdToken(idToken);
-            if ('UID' in decodedToken && 'Name' in decodedToken && 'Bio' in decodedToken && 'Major' in decodedToken) {
+            if ('uid' in decodedToken && 'name' in decodedToken && 'bio' in decodedToken && 'major' in decodedToken) {
                 req.body = decodedToken;
             } else {
                 res.status(401).send({"error": "Invalid user data types"});
@@ -20,9 +20,7 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
             }
         }
         else {
-            req.body = {
-                uid: idToken
-            };
+            req.body.uid = idToken;
         }
         next();
 
@@ -31,6 +29,5 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
         return;
     }
 }
-
 
 export default authMiddleware;

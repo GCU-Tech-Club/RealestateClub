@@ -1,10 +1,14 @@
 export interface Event {
-  UID: string;
-  icon?: string;
-  Date: Date;
-  Location: string
-  EventName: string;
-  Description: string;
-  Registered: string[];
-  Attended: string[];
+    uid: string;
+    icon?: string;
+    date: Date;
+    location: string
+    eventName: string;
+    description: string;
+    registered: string[];
+    attended: string[];
+    createdBy: string;
+    secret: string;
 }
+
+export type PublicEvent = Omit<Event, 'secret'>;
