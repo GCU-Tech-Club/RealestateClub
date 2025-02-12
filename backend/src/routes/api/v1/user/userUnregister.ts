@@ -13,15 +13,16 @@ router.delete('/:userId/register/:eventId', async (req, res) => {
     try {
         const colRefs = await db.listCollections();
         console.log(colRefs);
-        const collectionRef = db.collection("Events").doc();
+        const collectionRef = db.collection("events").doc();
         console.log(collectionRef);
-        const eventRef: FirebaseFirestore.DocumentReference = await db.collection('Events').doc(eventId);
+        const eventRef: FirebaseFirestore.DocumentReference = await db.collection('events').doc(eventId);
         console.log(eventRef);
         //get event document
         const eventDoc = await eventRef.get();
 
         if(!eventDoc.exists) {
             res.status(404).send('Event not found');
+
         }
 
         const eventData = eventDoc.data() as Event;
@@ -31,7 +32,7 @@ router.delete('/:userId/register/:eventId', async (req, res) => {
         }
 
         //check if userId exists in the registered collection
-        const updatedRegistered = eventData.registered.filter((Registered: string) => Registered !== uid);
+        const updatedRegistered = eventData.registered.filter((registered: string) => registered !== uid);
 
         if(updatedRegistered.length === eventData.registered.length){
             res.status(404).send('User not found in participants')
