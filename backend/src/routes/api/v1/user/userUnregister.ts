@@ -1,22 +1,23 @@
 import { Router } from 'express';
 import { Event } from '../../../../types';
-const router = Router();
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
 import { getFirestore } from 'firebase-admin/firestore';
 
-router.delete('/:userId/register/:eventId', async (req, res) => {
-    const { userId, eventId } = req.params;
-    // let token = req.body as DecodedIdToken;
-   // console.log(token);
-    let uid = userId;
+const router = Router();
+
+router.delete('/:eventId', async (req, res) => {
+    const { eventId } = req.params;
+   let userUID: string;
+   if (process.env.PRODUCTION_MODE === 'true') {
+    userUID = (req.body as DecodedIdToken).uid;
+   } else {
+    userUID = req.body.uid;
+   }
     let db = getFirestore();
     try {
-        const colRefs = await db.listCollections();
-        console.log(colRefs);
-        const collectionRef = db.collection("events").doc();
-        console.log(collectionRef);
+        // const colRefs = await db.listCollections();
+        // const collectionRef = db.collection('events').doc();
         const eventRef: FirebaseFirestore.DocumentReference = await db.collection('events').doc(eventId);
-        console.log(eventRef);
         //get event document
         const eventDoc = await eventRef.get();
 
@@ -32,7 +33,7 @@ router.delete('/:userId/register/:eventId', async (req, res) => {
         }
 
         //check if userId exists in the registered collection
-        const updatedRegistered = eventData.registered.filter((registered: string) => registered !== uid);
+        const updatedRegistered = eventData.registered.filter((registered: string) => registered !== userUID);
 
         if(updatedRegistered.length === eventData.registered.length){
             res.status(404).send('User not found in participants')
@@ -40,13 +41,12 @@ router.delete('/:userId/register/:eventId', async (req, res) => {
 
         //update registered array
         await eventRef.update({
-            Registered: updatedRegistered,
+            registered: updatedRegistered,
         });
 
         res.status(200).send('User removed from registered');
 
     }   catch (error) {
-        console.log(error);
         res.status(500).send('Server error');
     }
 });

@@ -15,7 +15,7 @@ router.use('/', userUpdate);
 router.use('/', userFetch);
 router.use('/attend', userAttend);
 router.use('/register', userAssociate)
-router.use('/', userUnregister);
+router.use('/register', userUnregister);
 
 
 export default router;
