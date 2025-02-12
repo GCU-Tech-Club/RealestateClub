@@ -13,6 +13,6 @@ router.use('/', userDelete);
 router.use('/', userUpdate);
 router.use('/', userFetch);
 router.use('/attend', userAttend);
-router.use('/', userAssociate)
+router.use('/register', userAssociate)
 
 export default router;
