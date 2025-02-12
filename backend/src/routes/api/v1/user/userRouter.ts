@@ -5,6 +5,7 @@ import userUpdate from './userUpdate';
 import userFetch from './userFetch';
 import userAttend from './userAttend';
 import userAssociate from './userAssociate';
+import userUnregister from './userUnregister';
 
 const router = Router();
 
@@ -14,5 +15,7 @@ router.use('/', userUpdate);
 router.use('/', userFetch);
 router.use('/attend', userAttend);
 router.use('/register', userAssociate)
+router.use('/', userUnregister);
+
 
 export default router;
