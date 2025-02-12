@@ -6,17 +6,17 @@ import { messaging } from 'firebase-admin';
 const router = Router();
 
 router.post('/:eventId', async (req: Request, res: Response): Promise<void> => {
-  const eventId: string = req.params.eventId;
+  const eventUID: string = req.params.eventId;
   const secret = req.query.secret as string; // Get secret from query params
-  const UserUID = req.body.uid; // Get user UID from request body
+  const userUID = req.body.uid; // Get user UID from request body
 
-  if (!UserUID || !secret) {
+  if (!userUID || !secret) {
     res.status(400).json({ message: 'Missing required fields: uid or secret' });
     return;
   }
 
   try {
-    const eventDoc = await firestore.collection('events').doc(eventId).get();
+    const eventDoc = await firestore.collection('events').doc(eventUID).get();
 
     if (!eventDoc.exists) {
       res.status(401).json({ message: 'Event does not exist' });
@@ -30,13 +30,13 @@ router.post('/:eventId', async (req: Request, res: Response): Promise<void> => {
 
     await firestore
       .collection('events')
-      .doc(eventId)
-      .update({ attended: FieldValue.arrayUnion(UserUID) });
+      .doc(eventUID)
+      .update({ attended: FieldValue.arrayUnion(userUID) });
 
     res.status(201).json({
       message: 'User successfully marked as attending the event',
-      eventId,
-      UserUID,
+      eventUID,
+      userUID,
     });
   } catch (error) {
     console.error('Error processing attendance:', error);
