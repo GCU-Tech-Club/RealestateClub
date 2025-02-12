@@ -15,8 +15,6 @@ router.delete('/:eventId', async (req, res) => {
    }
     let db = getFirestore();
     try {
-        // const colRefs = await db.listCollections();
-        // const collectionRef = db.collection('events').doc();
         const eventRef: FirebaseFirestore.DocumentReference = await db.collection('events').doc(eventId);
         //get event document
         const eventDoc = await eventRef.get();
