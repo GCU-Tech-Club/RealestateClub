@@ -9,7 +9,6 @@ const router = Router();
 
 router.post('/:eventId', async (req, res) => {
   try {
-    // const userId = req.headers.authorization as string;
     let userId: string;
     if (process.env.PRODUCTION_MODE === 'true') {
       userId = (req.body as DecodedIdToken).uid;
@@ -39,24 +38,26 @@ router.post('/:eventId', async (req, res) => {
       userDoc &&
       eventDoc &&
       eventData &&
-      eventData.Registered &&
+      eventData.registered &&
       userDoc.data()
     ) {
-      // console.log("in first if statement")
-      let registeredArray = eventData.Registered;
+      let registeredArray = eventData.registered;
       for (let i = 0; i < registeredArray.length; i++) {
         if (userId === registeredArray[i]) {
-          // console.log("here")
           validRequest = false;
         }
       }
     }
+    
     if (validRequest) {
-      const document = firestore.doc(`events/${eventId}`);
-      await document.update({
-        Registered: FieldValue.arrayUnion(userId),
+      await firestore
+      .collection('events')
+      .doc(eventId)
+      .update({ registered: FieldValue.arrayUnion(userId) });
+
+      res.status(200).json({
+        message: 'User successfully registered for the event',
       });
-      res.send(200);
     } else {
       res.status(404).json({
         message:
@@ -64,7 +65,7 @@ router.post('/:eventId', async (req, res) => {
       });
     }
   } catch (error) {
-    res.send(500).json({
+    res.status(500).json({
       message: 'Error registering user for event.',
       error: error instanceof Error ? error.message : error,
     });
